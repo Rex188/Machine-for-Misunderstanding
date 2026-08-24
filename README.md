@@ -1,6 +1,6 @@
 # Project 2 Workflow — A Machine for Misunderstanding
 
-> **[English](README.md)** | [简体中文](README.zh-CN.md)
+> **[English](portfolio/project2/workflow/README.md)** | [简体中文](portfolio/project2/workflow/README.zh-CN.md)
 
 **What it is**: A's phenomenological body text → a black-box interpretation model → VAD vector → OSC → VCV sound.
 This directory is the MVP implementation layer of Project 2, **self-contained**. Run results: [run-log.md](run-log.md).
@@ -17,6 +17,7 @@ This directory is the MVP implementation layer of Project 2, **self-contained**.
 | `vad_to_osc.py` | **② VAD → OSC**, one-shot send (single test) |
 | `seq_to_osc.py` | **②′ seq loop driver**: append text → smooth glide + machine auto-cycle (primary) |
 | `max_interface.maxpat` | **Max 9 UI**: message input (unlock to edit, lock to click) / preset buttons (clickable while locked) → Python; receives state → shows VAD + seq (③ text display removed, see §3) |
+| `project2.vcv` | **VCV Rack patch** — the sound "mouth": VCO → VCF → VCA → AUDIO, driven by `/vad/*` OSC (In Port 7001) |
 | `seq_input.txt` | Watch-mode input: append a line = add a seq step |
 | `seq_log.jsonl` | Auto-log of every step (text + VAD + dwell), the raw material for the reveal |
 

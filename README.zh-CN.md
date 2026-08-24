@@ -1,6 +1,6 @@
 # Project 2 Workflow — A Machine for Misunderstanding
 
-> [English](README.md) | **[简体中文](README.zh-CN.md)**
+> [English](portfolio/project2/workflow/README.md) | **[简体中文](portfolio/project2/workflow/README.zh-CN.md)**
 
 **一句话**:A 的现象学文本 → 黑箱解释模型 → VAD 向量 → OSC → VCV 声音。
 本目录是 Project 2「A Machine for Misunderstanding」的 MVP 实现层(自包含)。实际运行结果见 [`运行记录.zh-CN.md`](运行记录.zh-CN.md)。
@@ -17,6 +17,7 @@
 | `vad_to_osc.py` | **② VAD → OSC 一次性发送**(单条测试用) |
 | `seq_to_osc.py` | **②′ seq 循环驱动器**:逐条追加文本 → 平滑滑动 + 机器自动循环(当前主用) |
 | `max_interface.maxpat` | **Max 9 交互+可视化界面**:message 输入(解锁编辑,锁回点击)/ 预制按钮(锁定可点) → 发 Python;收状态 → 显示 VAD + seq(③ 文本显示已移除,见 §3) |
+| `project2.vcv` | **VCV Rack 补丁** —— 声音「嘴」:VCO → VCF → VCA → AUDIO,由 `/vad/*` OSC 驱动(In Port 7001) |
 | `seq_input.txt` | watch 模式喂文本:append 一行 = 追加一步 seq |
 | `seq_log.jsonl` | 运行时自动记录每一步(文本 + VAD + dwell),**reveal 的原始材料** |
 
