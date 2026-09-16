@@ -16,10 +16,13 @@ This directory is the MVP implementation layer of Project 2, **self-contained**.
 | `llm_to_vad.py` | **① text → VAD**. DeepSeek API for the MVP; swappable for a fine-tuned model (same-interface drop-in) |
 | `vad_to_osc.py` | **② VAD → OSC**, one-shot send (single test) |
 | `seq_to_osc.py` | **②′ seq loop driver**: append text → smooth glide + machine auto-cycle (primary) |
-| `max_interface.maxpat` | **Max 9 UI**: message input (unlock to edit, lock to click) / preset buttons (clickable while locked) → Python; receives state → shows VAD + seq (③ text display removed, see §3) |
-| `project2.vcv` | **VCV Rack patch** — the sound "mouth": VCO → VCF → VCA → AUDIO, driven by `/vad/*` OSC (In Port 7001) |
+| `max_interface.maxpat` | **Max 9 UI**: message input (unlock to edit, lock to click) / preset buttons (clickable while locked) → Python; receives state → shows VAD + seq |
+| `generative template new mvp.vcv` | **【Core Sound Patch】**: Complete 5-voice generative VCV Rack patch (Audible Instruments Plaits, Arp, NYSTHI ConstAddMult, Clocked, MixMaster, cvOSCcv) |
+| `docs/VCV_跳线实操指南.md` | **Patching Guide**: Comprehensive port-to-port cable connections, voice architecture, and physical calibration notes |
+| `docs/声音映射与媒介协调器执行方案.md` | **System Design & Philosophy**: Phenomenological bodily mapping architecture and acoustic coordination framework |
+| `project2.vcv` | Early single-voice baseline prototype patch |
 | `seq_input.txt` | Watch-mode input: append a line = add a seq step |
-| `seq_log.jsonl` | Auto-log of every step (text + VAD + dwell), the raw material for the reveal |
+| `seq_log.jsonl` | Auto-log of every step (text + VAD + dwell) |
 
 ---
 

@@ -19,7 +19,10 @@
 | `vad_to_osc.py` | VAD → OSC 一次性发送测试脚本 |
 | `seq_to_osc.py` | seq 循环驱动器 (Watch 模式自动巡回) |
 | `max_interface.maxpat` | Max 9 交互与状态可视化界面 |
-| `project2.vcv` / `generative template.vcv` | VCV Rack 发声终端 (5大声部 + cvOSCcv + Master 效果链) |
+| `generative template new mvp.vcv` | **【核心发声工程】**：完整 5 声部生成式 VCV Patch（Audible Instruments Plaits、Arp、NYSTHI ConstAddMult、Clocked、MixMaster、cvOSCcv） |
+| `docs/VCV_跳线实操指南.md` | **跳线完全手册**：端口级精确走线指南、声部分离与物理电平调试说明 |
+| `docs/声音映射与媒介协调器执行方案.md` | **系统方案与映射哲学**：从身体现象学到模块化声学的完整架构分析 |
+| `project2.vcv` | 早期简单单声部验证 patch |
 | `seq_input.txt` | Watch 模式追加输入文件 |
 | `seq_log.jsonl` | 运行日志记录 |
 
