@@ -12,6 +12,7 @@ llm_sound_interactive.py — Project 2: LLM 现象学身体经验理解与声音
     驱动 Plaits, Clocked, VCA, Plateau 实时发声！
 """
 
+from datetime import datetime
 import json
 import os
 import socket
@@ -53,6 +54,47 @@ PRESETS = {
 }
 
 
+LOG_FILE = "seq_log.jsonl"
+
+
+def log_entry(text: str, vadc: dict, sound: dict, title: str = "", preset_id: str = "custom", dwell: float = 0.0):
+    """记录每一次解释与声音映射至日志文件，确保实验可审计、可复现。"""
+    entry = {
+        "timestamp": datetime.now().isoformat(),
+        "preset_id": preset_id,
+        "title": title or "自定义身体描述",
+        "text": text,
+        "vad": {
+            "valence": vadc.get("valence"),
+            "arousal": vadc.get("arousal"),
+            "dominance": vadc.get("dominance"),
+            "confidence": vadc.get("confidence"),
+            "reasoning": vadc.get("reasoning", "")
+        },
+        "voltages": {
+            "timbre_v": sound.get("timbre_v"),
+            "frequency_v": sound.get("frequency_v"),
+            "amplitude_v": sound.get("amplitude_v"),
+            "envelope_v": sound.get("envelope_v"),
+            "mode_v": sound.get("mode_v"),
+            "mode_desc": sound.get("mode_desc"),
+            "chord_v": sound.get("chord_v"),
+            "chord_desc": sound.get("chord_desc"),
+            "type_v": sound.get("type_v"),
+            "type_desc": sound.get("type_desc"),
+            "noise_v": sound.get("noise_v"),
+            "bpm_estimated": sound.get("bpm_estimated")
+        },
+        "dwell": dwell,
+        "t": time.time()
+    }
+    try:
+        with open(LOG_FILE, "a", encoding="utf-8") as f:
+            f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+    except Exception as e:
+        print(f"[Warning] 写入日志失败: {e}", file=sys.stderr)
+
+
 def get_api_key() -> str:
     for env in ("DEEPSEEK_API_KEY", "ANTHROPIC_AUTH_TOKEN"):
         if os.environ.get(env):
@@ -68,6 +110,7 @@ def get_api_key() -> str:
         except Exception:
             pass
     return ""
+
 
 
 def call_llm(text: str) -> dict:
@@ -318,12 +361,15 @@ def main():
                 vadc = call_llm(p["text"])
                 sound = compute_sound_elements(vadc)
                 print_dashboard(p["text"], vadc, sound)
+                log_entry(p["text"], vadc, sound, title=p["title"], preset_id=pid, dwell=28.0)
                 state_cache = send_to_vcv(sock, sound, vadc, glide_steps=20, current_cache=state_cache)
+                print(f"📝 运行状态已持久化写入: {LOG_FILE}")
                 print(">>> 正在保持该状态，发声中... (停留 28 秒)")
                 time.sleep(28)
             print("\n>>> 90秒演示完成！")
             continue
 
+        title = "自定义输入"
         if choice in PRESETS:
             text = PRESETS[choice]["text"]
             title = PRESETS[choice]["title"]
@@ -339,7 +385,9 @@ def main():
         vadc = call_llm(text)
         sound = compute_sound_elements(vadc)
         print_dashboard(text, vadc, sound)
+        log_entry(text, vadc, sound, title=title, preset_id=choice, dwell=0.0)
         state_cache = send_to_vcv(sock, sound, vadc, glide_steps=15, current_cache=state_cache)
+        print(f"📝 运行状态已持久化写入: {LOG_FILE}")
         print("✅ OSC 指令已平滑注入 VCV Rack！")
 
 

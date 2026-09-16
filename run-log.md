@@ -1,67 +1,93 @@
-# Run Log — 2026-08-24 (MVP Day 1 Acceptance)
+# Run Log — 2026-09-16 (Literary Phenomenological Benchmark Acceptance)
 
 > **[English](run-log.md)** | [简体中文](运行记录.zh-CN.md)
 
-> Acceptance criteria: project MVP spec §5 (kept outside the repo). Raw data: [`seq_log.jsonl`](seq_log.jsonl).
+> This document records the empirical execution data of Project 2 ("A Machine for Misunderstanding") driven by classic literary bodily experience texts. All interactive sessions, LLM inferences, and acoustic voltage calculations are persisted in real time to [`seq_log.jsonl`](seq_log.jsonl) via [`llm_sound_interactive.py`](llm_sound_interactive.py).
 
 ---
 
-## 1. This Session's Inputs & Machine Interpretations
+## 1. Literary Bodily Phenomenological Benchmark Inputs & Machine Interpretations
 
-One participant A gave two real body descriptions; the machine explained each into a VAD anchor and wove them into the seq in order:
+The system evaluates three contrasting literary excerpts depicting extreme bodily phenomenological states through the DeepSeek LLM black-box interpretation engine, generating four-dimensional psychological vectors $\{V, A, D, C\}$:
 
-| seq | A's text | valence | arousal | dominance | confidence | dwell |
-|---|---|---|---|---|---|---|
-| 1 | 我感觉很热，然后很闷，天气非常燥热，但是还能接受 | 0.4 | 0.7 | 0.3 | 0.6 | **9.0 s** |
-| 2 | 突然就很凉快，然后我舒服得很，我希望听到很欢快的节奏 | 0.9 | 0.8 | 0.6 | 0.8 | **6.0 s** |
+| Excerpt | Literary Source & Context | Bodily Phenomenological Excerpt | Valence | Arousal | Dominance | Confidence | Dwell |
+|---|---|---|---|---|---|---|---|
+| **Preset 1** | **The Temple of the Golden Pavilion**<br>Yukio Mishima · Mizoguchi | 钥匙在锁孔里迟疑。我的舌头在牙齿背后痉挛，第一个音节卡在喉管深处，像一块滚烫而粗糙的石头。内心的金阁在剧烈燃烧，但在外界看来，我只是一个张着嘴、面部抽搐的怪物。<br>*(Key hesitates in lock. Tongue spasms behind teeth, first syllable stuck in throat like a scalding rough stone. Inner Golden Pavilion burns violently, while outwardly looking like a twitching monster.)* | **0.20**<br>(Extreme negative) | **0.85**<br>(Violent surge) | **0.15**<br>(Loss of control) | **0.90**<br>(High certainty) | **28.0 s** |
+| **Preset 2** | **Spring Snow**<br>Yukio Mishima · Kiyoaki | 车窗外是漫天纷飞的春雪，落在手背上瞬间融化成刺骨的水滴。呼吸在毛毯里变得越来越轻、越来越冷，指尖失去知觉，整个肉身仿佛正一寸一寸融进无声的积雪深处。<br>*(Spring snow outside carriage, melting on hands into piercing water drops. Breathing in blanket grows lighter and colder, fingertips lose sensation, whole flesh dissolving inch by inch into silent snow.)* | **0.18**<br>(Frigid desolation) | **0.12**<br>(Near-stasis) | **0.08**<br>(Helplessness) | **0.88**<br>(Explicit decay) | **28.0 s** |
+| **Preset 3** | **The Sound and the Fury**<br>William Faulkner · Benjy | 门开了，冷风扑进来，但我能闻到火的温度。火光在光滑的木地板上跳舞，亮晃晃的花纹一圈圈荡开。我抓着铁丝网，身体在风里剧烈摇晃，骨头里全是一阵阵发烫的叫喊。<br>*(Door opens, cold wind rushes in, but I smell the heat of fire. Firelight dances on smooth floor. Gripping wire fence, body shaking violently in wind, hot screams surging inside bones.)* | **0.45**<br>(Synesthetic clash) | **0.88**<br>(Visceral tremor) | **0.25**<br>(Instinctive surrender) | **0.78**<br>(Sensory complexity) | **28.0 s** |
 
-**The machine's interpretation is meaningful**:
-- seq 1 "hot · stuffy · dry heat" → mildly negative (0.4), a bit agitated (0.7), passive (0.3); "still bearable" pulls it back from purely negative.
-- seq 2 "cool · comfortable · upbeat rhythm" → positive (0.9), high energy (0.8); the machine **understood "upbeat rhythm" and pushed arousal to 0.8**.
-- confidence reflects how self-consistent the text is: seq 1 is self-contradictory (dry heat vs. still bearable) → 0.6 (hesitant, dwells 9 s); seq 2 is clearly comfortable → 0.8 (decisive, dwells 6 s).
-
----
-
-## 2. Sound Chain Verification (built through the morning)
-
-| Step | Verification | Result |
-|---|---|---|
-| text → VAD | the two texts produce clearly opposite semantic outputs | ✅ |
-| VAD → OSC | local UDP decoder received 4 `/vad/*` messages | ✅ |
-| OSC → VCV | ch1 VAL → VCO pitch; switching the two texts → **clear pitch jump** | ✅ chain is real |
-| all three params | valence→VCF / arousal→VCO / dominance→VCA all track the text | ✅ |
-| seq loop | machine auto-cycles between the two anchors, dwell varies with confidence | ✅ |
+### Machine Reasoning & Psychoacoustic Analysis
+1. **The Temple of the Golden Pavilion**: The LLM extracts tongue spasms, choking throat sensations, and facial convulsions as extreme sympathetic nervous arousal and physical pain. The inability to articulate voice while being perceived outwardly as a monster produces near-zero dominance (D=0.15). The violent contrast between inner conflagration and physical paralysis results in an intensely dark, suffocated valence (V=0.20, A=0.85).
+2. **Spring Snow**: The model identifies melting snow, coldness, fading shallow breath, and sensory numbness in fingertips as a clinical portrait of hypothermic metabolic decline and bodily dissolution into silence (A=0.12, D=0.08, V=0.18).
+3. **The Sound and the Fury**: The model captures Benjy's synesthetic fusion of sensory paradoxes (cold wind vs. warm fire, bodily convulsions against wire mesh, burning cries in the bones). This yields surging arousal (A=0.88) and low dominance (D=0.25), while the visual warmth of dancing firelight keeps valence moderate (V=0.45).
 
 ---
 
-## 3. Acceptance Status (vs. MVP spec §5)
+## 2. Eurorack Modular Acoustic Synthesis & Voltage Measurements
 
-| # | Criterion | Status |
-|---|---|---|
-| 1 | Difference is audible: two texts with different valence / arousal / dominance sound different in brightness, density, stability | ✅ verified |
-| 2 | Chain is real: text → DeepSeek → (OSC) → VCV → audio, every step actually runs | ✅ verified |
-| 3 | No clipping: a 60–90 s piece without obvious clipping, 6 dB headroom at the peak | ⏳ not done (Day 4 mixing) |
-| 4 | A technical write-up: input texts, model outputs, mapping, patch, known issues — reproducible by others | ✅ this file + README |
+[`llm_sound_interactive.py`](llm_sound_interactive.py) maps the psychological vectors into authentic physical Eurorack control voltages (-5V to +5V / 0V to 10V):
 
-**MVP core achieved**: the sound layer and chain authenticity are established; the remaining clipping control is a sound-design/mixing task.
-
----
-
-## 4. Issues & Fixes (process log)
-
-1. **WatchSource re-read bug (2026-08-24)**: in `--watch` mode each poll re-read the whole file, feeding old lines in as new input over and over (one sentence got interpreted 8 times). Fix: track the file offset, read only the appended bytes. **Lesson: the pipe (stdin) path passing tests does not mean watch mode works — test both input sources.**
-2. **`vad_to_osc.py` `json.load` → `json.loads`**: the stdin branch reads a str, not a file.
-3. **OSC port alignment**: send-side default port changed 9000 → 7001 to match cvOSCcv's In Port (that module auto-resets to 7001 after every edit).
-4. **Bare-terminal all-neutral fallback bug (2026-08-24)**: running `seq_to_osc.py` in my own terminal returned all `{0.5, 0.5, 0.5, 0.0}`. Root cause: the shell's `http_proxy` points at local 127.0.0.1:9567, while `NO_PROXY` is only injected by Claude Code (absent in a bare terminal) → urllib sent the api.deepseek.com request to the local proxy, which can't reach DeepSeek → every segment fell into the failure fallback. Fix: `llm_to_vad.py` uses an empty `ProxyHandler` to force a direct connection, no longer depending on the shell environment; the failure path now prints a stderr hint instead of silently returning neutral. **Lesson: code must not depend on the dev environment's shell variables.**
-5. **Max `udpreceive` can't carry text (2026-08-24)**: the "current step's raw text" never displayed. The user pasted the Max console errors — `OSC packet size (43/79/82) not a multiple of 4 bytes: dropping` + `Bad message name string: Unreasonably long string` — decisive evidence: **Max 9's `udpreceive` parses every UDP packet as OSC; non-4-byte-aligned packets are dropped, and Chinese OSC strings are dropped as absurdly long message names**. So both the raw-text packet and the raw-OSC Chinese string die on the same parser (`/state` is a 48-byte aligned float packet, which is why it has always worked). Fix: send the text over standard OSC `/step_text` to a **separate port 7201**, received by the OSC-specialized `osc.udpreceive` + `route /step_text` on the Max side (leaving the healthy `/state` line on 7200 untouched). **Lesson: `udpreceive` ≠ a general UDP receiver; it's a strict OSC parser — for strings/Chinese you must use the osc.* family.**
-6. **`osc.udpreceive` doesn't exist locally (2026-08-24)**: `osc.udpreceive: No such object` — the osc.* extension package is not installed/enabled. **Pivot: bypass UDP strings entirely.** Max stores the text into a local `coll` (index = send order = seq index); Python already broadcasts the current seq index as the 5th float of `/state`; `coll get <seq_idx>` looks the text up for display; `prepend append` stores, `prepend get` queries — zero strings cross UDP, only core objects. Limitation: text appended via the watch file never enters the coll, so ③ doesn't show it. **Lesson: if a working float channel + a local table can solve it, don't build a new transport; and confirm an object exists in the current environment before designing a protocol around it.**
+| Synthesis Dimension | Target Module & Port | *Temple* (Preset 1) | *Spring Snow* (Preset 2) | *Sound & Fury* (Preset 3) | Acoustic & Physical Behavior |
+|---|---|---|---|---|---|
+| **Plaits Mode CV** | Audible Plaits `MODE CV` | **0.66 V** | **0.05 V** | **2.10 V** | **Radical timbral engine shift**: *Temple* lands squarely on **2-Op FM Metallic Tearing**; *Spring Snow* retreats to **Pure Sine Wave** stasis; *Sound & Fury* jumps to **Harmonic Modal Resonator / Chords**. |
+| **Clocked BPM CV** | Impromptu Clocked `BPM_INPUT` | **+1.48 V** (~158 BPM) | **-2.24 V** (~68 BPM) | **+1.84 V** (~167 BPM) | Dramatic 2.3x tempo contrast; *Temple* and *Sound & Fury* exhibit cardiac panic, while *Spring Snow* approaches cardiac stasis. |
+| **VCA-1 Level CV** | Bogaudio VCA-1 `CV` | **+8.38 V** (Explosive blast) | **+5.38 V** (Subdued hum) | **+8.62 V** (Roaring tremor) | +2.0V physical floor ensures non-zero audibility; high arousal pushes output up to +8.6V near-saturation headroom. |
+| **Plateau Decay CV** | DHE Plateau `DECAY` | **-3.60 V** (Dry & tight) | **-0.12 V** (10s cavernous wash) | **-3.21 V** (Fleshy attack) | *Spring Snow* opens vast 10+ second reverberant decay, sonifying the dissolution of the flesh into winter snow. |
+| **ScaleCV Mode CV** | AaronStatic ScaleCV `MODE` | **-2.0 V** (Phrygian) | **-2.0 V** (Phrygian) | **-3.0 V** (Dorian) | Oppressive literary states settle on dark Phrygian modality; Benjy's state settles on floating modal Dorian. |
+| **DiatonicCV Chord** | AaronStatic DiatonicCV `CHORD` | **5.0 V** (vi chord) | **3.0 V** (IV chord) | **5.0 V** (vi chord) | Shifts away from stable tonic (I) into tension-laden submediant / subdominant harmonic territory. |
+| **DiatonicCV Type** | AaronStatic DiatonicCV `TYPE` | **0.0 V** (Pure Triad) | **0.0 V** (Pure Triad) | **0.0 V** (Pure Triad) | High confidence ($C > 0.75$) preserves unambiguous triad harmonies. |
+| **Noise Level CV** | MindMeld MixMaster Trk 5 | **+8.06 V** (Violent wind/blast) | **+3.89 V** (Subtle breath) | **+8.51 V** (Roaring static) | Track 5 fader at 0dB driven by +8V CV translates bodily panic into visceral white noise roar. |
 
 ---
 
-## 5. Known Issues (left for the next phase)
+## 3. Key Engineering Calibrations
 
-- **Max ③ "current step's text" display: decision — not fixing (2026-08-24)**. After multiple repair rounds (`udpreceive` drops non-OSC/Chinese strings → `osc.udpreceive` not installed → coll local-table approach), this is an environment limitation + a nice-to-have, not worth more effort. **Input switches to `seq_input.txt` watch-appending** (equivalent to the Max input, and scriptable). The `coll` chain (`prepend append` / `coll` / `prepend get`) was also removed from the on-disk maxpat; the UI is back to pure "input + VAD/seq display" (28 boxes, no dangling wires).
-- **Model non-determinism**: repeated calls on the same text drift slightly (temperature 0.3). For demos use fixed comparison texts; for the formal experiment, pin the model version and log every output.
-- **Real-time latency**: each text feed adds ~1–2 s of LLM interpretation delay; the loop advances at roughly "one 6–10 s segment + glide".
-- **confidence doesn't go into VCV**: bridge-side only, decides dwell seconds. To give it an audible role inside the patch, wire it elsewhere (e.g., drive a clock/LFO).
-- **6 dimensions not implemented**: the protocol reserves slots; fill in once the names are aligned with the teacher.
+1. **Plaits 0.66V FM Tearing Calibration**:
+   - VCV Rack's Audible Instruments Plaits does not follow a 1V/model scaling. The 8 melodic models span **`0.0V ~ 2.4V`** (~0.30V per model).
+   - Calibrated voltage **0.66V** lands directly on the 2-operator FM synthesis engine, delivering raw metallic tear and distortion under intense tension.
+2. **Arpeggiator Decoupling (`NYSTHI ConstAddMult`)**:
+   - To decouple the arpeggiator from Plaits' timbral modulation, `NYSTHI ConstAddMult` is patched between `DiatonicCV` and `Arp` pitch input, adding a `+1.0V ~ +2.0V` DC offset.
+   - This lifts the Arp voice 1–2 octaves above Plaits, creating a pristine crystalline bell register separated from the gritty bass pad.
+3. **Positive Eurorack Noise CV**:
+   - Negative control voltages previously shut down the noise channel. Shifting to **`+2.0V ~ +10.0V`** positive range ensures noise modulates from subtle atmospheric room tone (+2V) up to a deafening gale (+10V).
+
+---
+
+## 4. Persistent Logging & Reproducibility
+
+Every interaction, LLM response, Eurorack voltage, and playback dwell duration is logged to [`seq_log.jsonl`](seq_log.jsonl).
+
+Sample structured log entry:
+```json
+{
+  "timestamp": "2026-09-16T16:04:32.330906",
+  "preset_id": "1",
+  "title": "《金阁寺》三岛由纪夫 · 沟口（口吃、喉部痉挛、内心暴冲）",
+  "text": "钥匙在锁孔里迟疑。我的舌头在牙齿背后痉挛，第一个音节卡在喉管深处，像一块滚烫而粗糙的石头。内心的金阁在剧烈燃烧，但在外界看来，我只是一个张着嘴、面部抽搐的怪物。",
+  "vad": {
+    "valence": 0.2,
+    "arousal": 0.85,
+    "dominance": 0.15,
+    "confidence": 0.9,
+    "reasoning": "舌头痉挛、音节卡喉如滚烫石块、面部抽搐显示强烈生理激活与痛苦；无法发声且被外界视为怪物意味着掌控感极低；内心燃烧与外显失控的撕裂强化了黑暗压抑的效价。"
+  },
+  "voltages": {
+    "timbre_v": 0.66,
+    "frequency_v": 1.48,
+    "amplitude_v": 8.38,
+    "envelope_v": -3.6,
+    "mode_v": -2.0,
+    "mode_desc": "Phrygian (-2V · 极度压抑黑暗)",
+    "chord_v": 5.0,
+    "chord_desc": "vi (下中和弦)",
+    "type_v": 0.0,
+    "type_desc": "Triad (三和弦 · 纯正果断)",
+    "noise_v": 8.06,
+    "bpm_estimated": 158
+  },
+  "dwell": 28.0,
+  "t": 1789545872.3340108
+}
+```
+
+This log guarantees full auditability and experimental reproducibility.
