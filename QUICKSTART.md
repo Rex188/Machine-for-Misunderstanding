@@ -2,7 +2,7 @@
 
 > **[English](QUICKSTART.md)** | [简体中文](QUICKSTART.zh-CN.md)
 
-> Get it running in 5 minutes. Interface contract: [README.md](README.md); run log: [run-log.md](run-log.md).
+> Get it running in 5 minutes. Interface contract: [README.md](portfolio/project2/workflow/README.md); run log: [run-log.md](run-log.md).
 
 ## 0. What You Need
 

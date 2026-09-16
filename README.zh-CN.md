@@ -11,15 +11,17 @@
 
 | 文件 | 角色 |
 |---|---|
-| `README.md` | 本文件(英文主文档):目录结构、链路架构、接口契约、运行方式 |
-| `运行记录.zh-CN.md` | 实际运行结果与验收状态(2026-08-24, MVP Day 1) |
-| `llm_to_vad.py` | **① 文本 → VAD**。MVP 用 DeepSeek API;后续替换为自微调模型(**同接口 drop-in**) |
-| `vad_to_osc.py` | **② VAD → OSC 一次性发送**(单条测试用) |
-| `seq_to_osc.py` | **②′ seq 循环驱动器**:逐条追加文本 → 平滑滑动 + 机器自动循环(当前主用) |
-| `max_interface.maxpat` | **Max 9 交互+可视化界面**:message 输入(解锁编辑,锁回点击)/ 预制按钮(锁定可点) → 发 Python;收状态 → 显示 VAD + seq(③ 文本显示已移除,见 §3) |
-| `project2.vcv` | **VCV Rack 补丁** —— 声音「嘴」:VCO → VCF → VCA → AUDIO,由 `/vad/*` OSC 驱动(In Port 7001) |
-| `seq_input.txt` | watch 模式喂文本:append 一行 = 追加一步 seq |
-| `seq_log.jsonl` | 运行时自动记录每一步(文本 + VAD + dwell),**reveal 的原始材料** |
+| `README.md` | 英文主文档：架构、映射数学公式与运行说明 |
+| `README.zh-CN.md` | 本文件：中文架构与映射说明 |
+| `llm_sound_interactive.py` | **【最终核心交互驱动】**: 接收文学/身体描述 → LLM 现象学解释 → Eurorack 物理电压计算 → 平滑 Glide 发送 OSC 至 7001 |
+| `运行记录.zh-CN.md` | 实际运行结果与验收状态 |
+| `llm_to_vad.py` | 文本 → VAD 基础模型接口 |
+| `vad_to_osc.py` | VAD → OSC 一次性发送测试脚本 |
+| `seq_to_osc.py` | seq 循环驱动器 (Watch 模式自动巡回) |
+| `max_interface.maxpat` | Max 9 交互与状态可视化界面 |
+| `project2.vcv` / `generative template.vcv` | VCV Rack 发声终端 (5大声部 + cvOSCcv + Master 效果链) |
+| `seq_input.txt` | Watch 模式追加输入文件 |
+| `seq_log.jsonl` | 运行日志记录 |
 
 ---
 
@@ -60,62 +62,43 @@ A 在 Max 界面打字/追加文本 → 文本进 Python 脑 → 机器解释成
 - **confidence** 0=不确定 → 1=确信(机器对本次解释的确信度)
 - **失败行为**:缺字段 / 网络错误 → 中性向量 `{0.5, 0.5, 0.5, confidence: 0.0}`(声音保持中性,不爆音)
 
-### OSC 协议(预留 6 槽位)
+### OSC 协议与 Eurorack 物理电压映射 (最终版本)
 
-| 地址 | 类型 | 用途 |
-|---|---|---|
-| `/vad/valence` | float 0–1 | 音色明暗(VCF cutoff) |
-| `/vad/arousal` | float 0–1 | 能量/密度(VCO pitch) |
-| `/vad/dominance` | float 0–1 | 稳定/响度(VCA gain) |
-| `/vad/confidence` | float 0–1 | 决定每步停留秒数(不进 VCV) |
-| *(3 槽位预留)* | — | 未来新增维度,补槽位即可,链路不改 |
+`llm_sound_interactive.py` 将模型解释出的 VADC 四维空间，通过非线性心理声学算法转换为真实 Eurorack 控制电压（-5V ~ +5V / 0V ~ 10V）：
 
-### Max 界面桥(`seq_to_osc.py` ↔ `max_interface.maxpat`)
+| OSC 地址 | 发送电压范围 | 物理目标模块与端口 | 数值计算公式 (Algorithm) | 声学与概念理由 (Reasoning) |
+|---|---|---|---|---|
+| **`/param/timbre`** | `0.0V ~ 2.4V` | **Plaits (Macro Osc 2)** `MODE CV` | 依据实测：0.05V(正弦), 0.66V(FM金属), 2.1V(共振和弦) | 唤醒度 Arousal 驱动合成器算法质变，高压激昂下触发 FM 金属撕裂音 |
+| **`/param/frequency`** | `-3.0V ~ +4.0V` | **Clocked** `BPM_INPUT` | `freq_v = -3.0 + 7.0 * (0.7*A + 0.3*D)` | 对应 50 BPM 到 220+ BPM，Arousal 决定心率冲动 |
+| **`/param/amplitude`** | `+2.0V ~ +10.0V` | **VCA-1** `CV` | `amp_v = 2.0 + 8.0 * (0.35 + 0.50*A + 0.15*D)` | 抬高 2V 底限，A 占 0.5 权重，确保激烈情绪下绝不静音 |
+| **`/param/envelope`** | `-5.0V ~ +5.0V` | **Plateau** `DECAY` / ADSR | `env_v = -5.0 + 10.0 * (0.5*(1-A) + 0.3*D + 0.2*(1-C))` | 低 A 低 D 时拉长大混响尾迹，制造未解之谜与空间消融 |
+| **`/param/mode`** | `-4.0V ~ +2.0V` | **ScaleCV** `MODE_INPUT` | $V<0.25$:-2V(Phrygian), $V<0.45$:+1V(Minor), $V>0.65$:-4V(Major) | Valence 效价决定调式色彩（负压抑小调/弗里吉亚，正明朗大调） |
+| **`/param/chord`** | `0.0V ~ 6.0V` | **DiatonicCV** `CHORD_INPUT` | `chord_v = round(6.0 * (0.6*A + 0.4*(1-D)))` | 对应 I 到 VII 级和弦，平稳为主和弦，紧张为属/减和弦 |
+| **`/param/type`** | `0.0V ~ 2.0V` | **DiatonicCV** `TYPE_INPUT` | $C>0.75$:0V(三和弦), $C>0.45$:1V(七和弦), 否则 2V(九和弦) | 确信度 $C$ 决定和弦复杂度（确信=纯三和弦，犹豫迷茫=7th/9th） |
+| **`/param/noise`** | `+2.0V ~ +10.0V` | **MixMaster** Track 5 Level CV | `noise_v = 2.0 + 8.0 * (0.15 + 0.85*A*(1.2 - 0.4*C))` | 高 Arousal 与低 Confidence 共同触发肺泡喘息与白噪咆哮 |
 
-| 端口 | 方向 | 消息 | 内容 |
-|---|---|---|---|
-| **7100** | Max → Python | `/text` + string | A 的文本(点按钮/回车触发) |
-| **7200** | Python → Max | `/state` + 7 float | valence, arousal, dominance, confidence, 当前步, 总步数, 剩余秒(每 0.1s) |
-| **7201** | Python → Max | `/step_text` + string(OSC) | 当前步原文(预留:等 Max 装了 osc 扩展包后启用;当前界面未用) |
-
-**③ 当前解释的文本显示:已移除(2026-08-24 决策)**。Max 9 的 `udpreceive` 把所有 UDP 当 OSC 解析,承载不了中文文本;`osc.udpreceive` 需 osc 扩展包(本机未装)。判断为环境限制 + 非验收必需项,不再投入。**界面 = 输入 + VAD/seq 显示;输入主用 `seq_input.txt` watch 追加**(与 Max 输入等价且可脚本化)。
+> 💡 **Arp 解耦设计 (Const Add)**：  
+> 为防止 Arp 被 Plaits 的 Mode 切换牵连，在 `DiatonicCV` 到 `Arp` 的 Pitch 输入之间串联一个 **Const Add（如 Bogaudio Offset / Fundamental 8vert）**，注入 `+1.0V ~ +2.0V` 的恒定直流偏置，将 Arp 强制抬升 1~2 个八度，确保高频晶莹琵音与主 Pad 彻底分离。
 
 ---
 
-## 4. 三个声音参数与映射
+## 4. 运行方式
 
-| 向量维度 | 含义 | 映射到 | Why |
-|---|---|---|---|
-| **Valence** | 积极 ↔ 消极 | **音色明暗**(VCF cutoff) | 亮 = 正、暗 = 负,听感最直觉的效价对应 |
-| **Arousal** | 安静 ↔ 激动 | **能量 / 密度**(VCO pitch) | 唤醒的本质是能量水平 |
-| **Dominance** | 被动 ↔ 主导 | **稳定 / 响度**(VCA gain) | 支配 = 控制 vs 失控;正是黑箱的「失控层」 |
+### 主用交互式驱动（推荐）：
+```bash
+# 启动交互式 LLM 声音控制终端 (支持名著预设 1/2/3、90秒自动巡回 4、自定义输入 c)
+python3 llm_sound_interactive.py
+```
 
----
-
-## 5. confidence 的用法(桥侧,不进 VCV)
-
-`seq_to_osc.py` 用 confidence 决定**每步停留秒数**(`停留 = 3 + (1 − confidence) × 15`,可调 3~18s):
-
-- 机器**越不确定 → 停留越久**(迟疑、徘徊)
-- 机器**越确定 → 越果断推进**
-
-黑箱解释者「犹不犹豫」的可听见表现。
-
----
-
-## 6. 运行方式
-
+### 单条测试与流水线：
 ```bash
 # 单条测试(发 4 条 OSC 后结束)
 echo "我的身体往里缩，不敢动" | python3 llm_to_vad.py | python3 vad_to_osc.py
 
-# seq 交互式(每行一段文本,空行退出;机器自动循环)
-python3 seq_to_osc.py
-
-# seq watch 模式(往 seq_input.txt append 一行 = 追加一步)
+# seq 循环驱动器 (Watch 模式)
 python3 seq_to_osc.py --watch seq_input.txt
+```
 
-# 常用参数
 python3 seq_to_osc.py --glide 0.12            # 锚点间滑动速度(0~1)
 python3 seq_to_osc.py --dwell-min 3 --dwell-max 18   # 每步停留范围(秒)
 python3 seq_to_osc.py --verbose               # 每次发送都打印(调试)

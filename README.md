@@ -54,59 +54,51 @@ A types in Max or appends a line → Python explains it into a VAD anchor, glide
 {"valence": 0.4, "arousal": 0.7, "dominance": 0.3, "confidence": 0.6}
 ```
 
-| Field | Meaning |
-|---|---|
-| **valence** | 0 = negative → 1 = positive |
-| **arousal** | 0 = calm → 1 = excited |
-| **dominance** | 0 = passive / out of control → 1 = in control |
+| Field          | Meaning                                                                       |
+| -------------- | ----------------------------------------------------------------------------- |
+| **valence**    | 0 = negative → 1 = positive                                                   |
+| **arousal**    | 0 = calm → 1 = excited                                                        |
+| **dominance**  | 0 = passive / out of control → 1 = in control                                 |
 | **confidence** | 0 = uncertain → 1 = certain (the machine's confidence in this interpretation) |
 
 **Failure behavior**: missing field / network error → neutral vector `{0.5, 0.5, 0.5, confidence: 0.0}` (sound stays neutral, no clipping).
 
-### OSC Protocol (6 slots reserved)
+### OSC Protocol & Eurorack Physical Voltage Mapping (Final Specification)
 
-| Address | Type | Purpose |
-|---|---|---|
-| `/vad/valence` | float 0–1 | timbre brightness (VCF cutoff) |
-| `/vad/arousal` | float 0–1 | energy / density (VCO pitch) |
-| `/vad/dominance` | float 0–1 | stability / loudness (VCA gain) |
-| `/vad/confidence` | float 0–1 | decides dwell seconds per step (not sent into VCV) |
-| *(3 slots reserved)* | — | for future dimensions; add a slot, chain unchanged |
+`llm_sound_interactive.py` converts the VADC psychological state into real Eurorack modular control voltages (-5V to +5V / 0V to 10V) via psychoacoustic algorithms:
 
-### Max ↔ Python Bridge (`seq_to_osc.py` ↔ `max_interface.maxpat`)
+| OSC Address | Voltage Output | Target Module & Port | Calculation Algorithm | Psychoacoustic & Conceptual Reasoning |
+|---|---|---|---|---|
+| **`/param/timbre`** | `0.0V ~ 2.4V` | **Plaits (Macro Osc 2)** `MODE CV` | Empirically calibrated: 0.05V(Sine), 0.66V(FM Metal), 2.1V(Chords/Modal) | Arousal switches Plaits' synthesis engines; intense agitation triggers metallic FM tearing |
+| **`/param/frequency`** | `-3.0V ~ +4.0V` | **Clocked** `BPM_INPUT` | `freq_v = -3.0 + 7.0 * (0.7*A + 0.3*D)` | Sweeps 50 BPM to 220+ BPM; Arousal drives the visceral pulse rate |
+| **`/param/amplitude`** | `+2.0V ~ +10.0V` | **VCA-1** `CV` | `amp_v = 2.0 + 8.0 * (0.35 + 0.50*A + 0.15*D)` | Firm 2V floor + 0.5 Arousal weight ensures loud punch without choking |
+| **`/param/envelope`** | `-5.0V ~ +5.0V` | **Plateau** `DECAY` / ADSR | `env_v = -5.0 + 10.0 * (0.5*(1-A) + 0.3*D + 0.2*(1-C))` | Low Arousal & low Dominance expand 10s reverb tails, creating spatial dissolution |
+| **`/param/mode`** | `-4.0V ~ +2.0V` | **ScaleCV** `MODE_INPUT` | $V<0.25$:-2V(Phrygian), $V<0.45$:+1V(Minor), $V>0.65$:-4V(Major) | Valence selects musical mode (dark Phrygian/Minor vs. radiant Major/Lydian) |
+| **`/param/chord`** | `0.0V ~ 6.0V` | **DiatonicCV** `CHORD_INPUT` | `chord_v = round(6.0 * (0.6*A + 0.4*(1-D)))` | Selects chord degrees I to VII (tonic at rest, dominant/diminished at tension) |
+| **`/param/type`** | `0.0V ~ 2.0V` | **DiatonicCV** `TYPE_INPUT` | $C>0.75$:0V(Triad), $C>0.45$:1V(7th), otherwise 2V(9th) | Confidence decides harmonic ambiguity (certainty=Triad, hesitation=7th/9th) |
+| **`/param/noise`** | `+2.0V ~ +10.0V` | **MixMaster** Track 5 Level CV | `noise_v = 2.0 + 8.0 * (0.15 + 0.85*A*(1.2 - 0.4*C))` | High Arousal & low Confidence trigger physiological breathlessness & noise blast |
 
-| Port | Direction | Message | Content |
-|---|---|---|---|
-| **7100** | Max → Python | `/text` + string | A's text (triggered by clicking a button / pressing enter) |
-| **7200** | Python → Max | `/state` + 7 float | valence, arousal, dominance, confidence, current step, total steps, seconds remaining (every 0.1 s) |
-| **7201** | Python → Max | `/step_text` + string(OSC) | current step's raw text (**reserved** — enabled once the osc extension package is installed; the UI does not use it now) |
-
-**③ Current-step text display: removed (decision 2026-08-24)**. Max 9's `udpreceive` parses every UDP packet as OSC and cannot carry Chinese text; `osc.udpreceive` requires the osc extension package (not installed here). Judged an environment limitation + a non-required nicety, no more effort spent. **The UI = input + VAD/seq display; input is primarily appended to `seq_input.txt` in watch mode** (equivalent to the Max input, and scriptable).
+> 💡 **Arp Register Decoupling (Const Add)**:  
+> To decouple the arpeggiator from Plaits' mode modulation, insert a **Const Add module (Bogaudio Offset / Fundamental 8vert)** between `DiatonicCV` and `Arp` pitch input with a `+1.0V ~ +2.0V` DC offset. This shifts Arp 1–2 octaves up into a pristine high-register constellation.
 
 ---
 
-## 4. The Three Sound Parameters
+## 4. How to Run
 
-| Dimension | Meaning | Maps to | Why |
-|---|---|---|---|
-| **Valence** | positive ↔ negative | **timbre brightness** (VCF cutoff) | bright = positive, dark = negative — the most intuitive auditory valence |
-| **Arousal** | calm ↔ excited | **energy / density** (VCO pitch) | arousal is essentially energy level |
-| **Dominance** | passive ↔ in control | **stability / loudness** (VCA gain) | dominance = control vs. losing control — exactly the black box's "loss-of-control" layer |
+### Primary Interactive LLM Driver (Recommended):
+```bash
+# Start the interactive LLM terminal driver (Presets 1/2/3, 90s auto-cycle 4, custom input c)
+python3 llm_sound_interactive.py
+```
 
----
+### One-shot & Loop Pipelines:
+```bash
+# One-shot text test
+echo "我的身体往里缩，不敢动" | python3 llm_to_vad.py | python3 vad_to_osc.py
 
-## 5. What Confidence Does (bridge-side, not into VCV)
-
-`seq_to_osc.py` uses confidence to decide **how long each step dwells** (`dwell = 3 + (1 − confidence) × 15`, adjustable 3–18 s):
-
-- the more **uncertain** the machine → the **longer** it lingers (hesitation)
-- the more **certain** → the more decisively it moves on
-
-An audible sign of how "hesitant" the black-box interpreter is.
-
----
-
-## 6. How to Run
+# Auto-cycle loop driver (watch mode)
+python3 seq_to_osc.py --watch seq_input.txt
+```
 
 ```bash
 # one-shot test (sends 4 OSC messages then exits)

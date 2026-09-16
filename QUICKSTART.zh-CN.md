@@ -2,7 +2,7 @@
 
 > [English](QUICKSTART.md) | **[简体中文](QUICKSTART.zh-CN.md)**
 
-> 5 分钟跑起来。接口契约见 [`README.zh-CN.md`](README.zh-CN.md)，运行记录见 [`运行记录.zh-CN.md`](运行记录.zh-CN.md)。
+> 5 分钟跑起来。接口契约见 [`README.zh-CN.md`](portfolio/project2/workflow/README.zh-CN.md)，运行记录见 [`运行记录.zh-CN.md`](运行记录.zh-CN.md)。
 
 ## 0. 需要什么
 
