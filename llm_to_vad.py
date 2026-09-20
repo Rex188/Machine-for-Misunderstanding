@@ -23,7 +23,7 @@ import urllib.request
 
 # ── 配置 ──────────────────────────────────────────────────────────────
 ENDPOINT = os.environ.get("DEEPSEEK_BASE_URL", "https://api.deepseek.com/chat/completions")
-MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-v4-flash")
+MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-chat")
 
 SYSTEM_PROMPT = (
     "You map a phenomenological body description to a VAD vector. "
@@ -39,21 +39,13 @@ SYSTEM_PROMPT = (
 KEYS = ("valence", "arousal", "dominance", "confidence")
 FALLBACK = {"valence": 0.5, "arousal": 0.5, "dominance": 0.5, "confidence": 0.0}
 
+API_KEY_DEFAULT = "sk-f94b9c4c09d34a08ab7289b5827afc17"
+
 
 def get_key() -> str:
-    for env in ("DEEPSEEK_API_KEY", "ANTHROPIC_AUTH_TOKEN"):
-        if os.environ.get(env):
-            return os.environ[env]
-    # 兜底：读 ~/.claude/settings.json 的 env.ANTHROPIC_AUTH_TOKEN
-    p = os.path.expanduser("~/.claude/settings.json")
-    if os.path.exists(p):
-        try:
-            d = json.load(open(p))
-            if d.get("env", {}).get("ANTHROPIC_AUTH_TOKEN"):
-                return d["env"]["ANTHROPIC_AUTH_TOKEN"]
-        except Exception:
-            pass
-    return ""
+    if os.environ.get("DEEPSEEK_API_KEY"):
+        return os.environ["DEEPSEEK_API_KEY"]
+    return API_KEY_DEFAULT
 
 
 def _opener():

@@ -23,7 +23,7 @@ import urllib.request
 
 # ── 配置 ──────────────────────────────────────────────────────────────
 ENDPOINT = os.environ.get("DEEPSEEK_BASE_URL", "https://api.deepseek.com/chat/completions")
-MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-v4-flash")
+MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-chat")
 OSC_HOST = "127.0.0.1"
 OSC_PORT = 7001
 
@@ -95,21 +95,13 @@ def log_entry(text: str, vadc: dict, sound: dict, title: str = "", preset_id: st
         print(f"[Warning] 写入日志失败: {e}", file=sys.stderr)
 
 
+API_KEY_DEFAULT = "sk-f94b9c4c09d34a08ab7289b5827afc17"
+
+
 def get_api_key() -> str:
-    for env in ("DEEPSEEK_API_KEY", "ANTHROPIC_AUTH_TOKEN"):
-        if os.environ.get(env):
-            return os.environ[env]
-    p = os.path.expanduser("~/.claude/settings.json")
-    if os.path.exists(p):
-        try:
-            d = json.load(open(p))
-            if d.get("env", {}).get("ANTHROPIC_AUTH_TOKEN"):
-                return d["env"]["ANTHROPIC_AUTH_TOKEN"]
-            if d.get("env", {}).get("DEEPSEEK_API_KEY"):
-                return d["env"]["DEEPSEEK_API_KEY"]
-        except Exception:
-            pass
-    return ""
+    if os.environ.get("DEEPSEEK_API_KEY"):
+        return os.environ["DEEPSEEK_API_KEY"]
+    return API_KEY_DEFAULT
 
 
 
