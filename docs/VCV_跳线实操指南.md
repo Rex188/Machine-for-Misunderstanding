@@ -147,22 +147,26 @@
 
 1. **`MindMeld MixMaster` 调音台**：
    * Master Fader 设在 **`-3.0 dB`** 位置。
-   * Track 1 (Pad) Fader: `-6.0 dB`
-   * Track 2 (Arp) Fader: `-8.0 dB`
-   * Track 3 (Bass) Fader: `-4.0 dB`
-   * Track 4 (Cloudy) Fader: `-10.0 dB`
-   * Track 5 (Noise) Fader: `-14.0 dB`
-2. **`squinkylabs-comp` 母带总线压缩器**（Row 0, Col 89）：
-   * `THRESHOLD`: 调到 **`-8.0 dB`**。
-   * `RATIO`: 设为 **`4:1`**。
-   * `ATTACK`: `25 ms`，`RELEASE`: `150 ms`。
-   * *(确保右侧电平表峰值永远在黄色区域，绝对不顶红，保留 6dB Headroom)*。
-3. **`ImpromptuModular Clocked`**（Row 2, Col -38）：
-   * 中间大旋钮 `BPM` 设为初始值 **`100 BPM`**。
+   * 各轨已命名清晰标注：
+     * Track 1: `PAD`（Fader: `-6.0 dB`）
+     * Track 2: `ARP`（Fader: `-8.0 dB`，经由 Bogaudio-VCF 滤波）
+     * Track 3: `BASS`（Fader: `-4.0 dB`，由 io47 塑形）
+     * Track 4: `LEAD`（Fader: `-10.0 dB`，Basal + Wolv）
+     * Track 5: `NOIS`（Fader: `-14.0 dB`，受 Caudal 混沌漂移驱动）
+   * **声像（Pan）**：已全部接入 `Vult Caudal` 物理双摆输出（Out 0~3, 9），彻底消除单调的周期性摆动。
+2. **Master 混音母带安全链路（MixMaster $\rightarrow$ Comp $\rightarrow$ Limiter $\rightarrow$ DAC）**：
+   * `squinkylabs-comp`（母带总线压缩）：
+     * `THRESHOLD`: **`-8.0 dB`**，`RATIO`: **`3:1`**，`ATTACK`: `25 ms`，`RELEASE`: `150 ms`。
+   * `Bogaudio-Lmtr`（母带砖墙防削波限幅器）：
+     * 挂载在声卡直接输入前端，`Threshold` 设为 **`-1.5 dB`**，软拐点保护，杜绝任何生成式瞬态过载爆音。
+3. **`Valley Plateau` 空间混响（Aux 1 规范）**：
+   * `DRY`: **`0.0` (Kill Dry 100% 全湿)**，消除发送总线带来的原声干信号叠加与梳状滤波。
+   * `WET`: **`1.0`**，`DECAY`: **`0.88`**（12~15 秒缥缈扩散尾音），混响深度纯由 MixMaster Aux 1 发送量掌控。
 4. **`AudibleInstruments Plaits`**（Row 1, Col 6）：
-   * 引擎选择（右上方两个按键）：选在第 1 或第 2 个绿色 LED（虚拟模拟双波形或加法谐波）。
-   * `TIMBRE` 旋钮打到 11 点钟方向（中低）。
-   * `MORPH` 旋钮打到 12 点钟方向。
+   * `TIMBRE` 衰减小旋钮顺时针开至 **`2 点钟方向 (+0.75)`**。
+   * `MORPH` 衰减小旋钮顺时针开至 **`2 点钟方向 (+0.75)`**，使 Timbre CV 调制真实生效。
+5. **`ImpromptuModular Clocked`**（Row 2, Col -38）：
+   * 中间大旋钮 `BPM` 设为初始值 **`100 BPM`**。
 
 ---
 
