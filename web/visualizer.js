@@ -48,17 +48,18 @@ window.AUDIO_ENGINE = {
   bassEnergy: 0.0,
   midEnergy: 0.0,
   highEnergy: 0.0,
+  currentDeviceId: null,
 
-  async toggle() {
+  async toggle(deviceId) {
     if (this.active) {
       this.stop();
       return false;
     } else {
-      return await this.start();
+      return await this.start(deviceId);
     }
   },
 
-  async start() {
+  async start(deviceId) {
     try {
       if (!this.audioCtx) {
         this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -66,14 +67,19 @@ window.AUDIO_ENGINE = {
       if (this.audioCtx.state === 'suspended') {
         await this.audioCtx.resume();
       }
-      this.stream = await navigator.mediaDevices.getUserMedia({
+      const constraints = {
         audio: {
           echoCancellation: false,
           noiseSuppression: false,
           autoGainControl: false,
         },
         video: false,
-      });
+      };
+      if (deviceId && deviceId !== 'default') {
+        constraints.audio.deviceId = { exact: deviceId };
+      }
+      this.stream = await navigator.mediaDevices.getUserMedia(constraints);
+      this.currentDeviceId = deviceId || 'default';
       const source = this.audioCtx.createMediaStreamSource(this.stream);
       this.analyser = this.audioCtx.createAnalyser();
       this.analyser.fftSize = 2048; // 1024 time-domain points & 1024 frequency bins

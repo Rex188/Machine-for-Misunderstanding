@@ -74,14 +74,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const historyList = document.getElementById('historyList');
 
-  // Live Audio Capture Controls
+  // Live Audio Capture Controls & Device Selectors
   const presentAudioBtn = document.getElementById('presentAudioBtn');
   const adminAudioBtn = document.getElementById('adminAudioBtn');
+  const presentAudioDeviceSelect = document.getElementById('presentAudioDeviceSelect');
+  const adminAudioDeviceSelect = document.getElementById('adminAudioDeviceSelect');
+
+  async function populateAudioDevices() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) return;
+    try {
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      const audioInputs = devices.filter(d => d.kind === 'audioinput');
+      if (audioInputs.length === 0) return;
+
+      [presentAudioDeviceSelect, adminAudioDeviceSelect].forEach(select => {
+        if (!select) return;
+        const curVal = select.value;
+        select.innerHTML = '';
+        audioInputs.forEach((d, idx) => {
+          const opt = document.createElement('option');
+          opt.value = d.deviceId;
+          opt.textContent = d.label || `Audio Input ${idx + 1}`;
+          select.appendChild(opt);
+        });
+        if (curVal && Array.from(select.options).some(o => o.value === curVal)) {
+          select.value = curVal;
+        }
+      });
+    } catch (e) {
+      console.warn('Could not enumerate audio devices:', e);
+    }
+  }
 
   async function handleAudioToggle() {
     if (window.AUDIO_ENGINE) {
-      const active = await window.AUDIO_ENGINE.toggle();
+      const select = presentView.classList.contains('active') ? presentAudioDeviceSelect : adminAudioDeviceSelect;
+      const deviceId = select ? select.value : 'default';
+      const active = await window.AUDIO_ENGINE.toggle(deviceId);
       updateAudioButtons(active);
+      if (active) {
+        await populateAudioDevices();
+      }
     }
   }
 
@@ -99,6 +132,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (presentAudioBtn) presentAudioBtn.addEventListener('click', handleAudioToggle);
   if (adminAudioBtn) adminAudioBtn.addEventListener('click', handleAudioToggle);
+
+  [presentAudioDeviceSelect, adminAudioDeviceSelect].forEach(sel => {
+    if (sel) {
+      sel.addEventListener('change', async (e) => {
+        const newId = e.target.value;
+        [presentAudioDeviceSelect, adminAudioDeviceSelect].forEach(s => {
+          if (s && s !== e.target) s.value = newId;
+        });
+        if (window.AUDIO_ENGINE && window.AUDIO_ENGINE.active) {
+          window.AUDIO_ENGINE.stop();
+          const active = await window.AUDIO_ENGINE.start(newId);
+          updateAudioButtons(active);
+        }
+      });
+    }
+  });
+
+  // Try populating device labels on startup
+  populateAudioDevices();
 
   let presetsCache = {};
   let debounceVadcTimer = null;

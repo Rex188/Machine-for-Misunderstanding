@@ -28,11 +28,16 @@
       </div>
 
       <div class="present-top-actions">
-        <!-- Live Audio Capture Toggle -->
-        <button id="presentAudioBtn" class="audio-capture-btn" title="Toggle Real-Time Audio Capture from VCV Rack">
-          <span class="audio-dot"></span>
-          <span class="audio-label">LIVE AUDIO: OFF</span>
-        </button>
+        <!-- Live Audio Capture Toggle & Device Selector -->
+        <div class="audio-control-cluster">
+          <button id="presentAudioBtn" class="audio-capture-btn" title="Toggle Real-Time Audio Capture from VCV Rack">
+            <span class="audio-dot"></span>
+            <span class="audio-label">LIVE AUDIO: OFF</span>
+          </button>
+          <select id="presentAudioDeviceSelect" class="audio-device-select" title="Select Audio Input Source">
+            <option value="default">Default Input (Mic / USB)</option>
+          </select>
+        </div>
 
         <!-- Mode Switch Capsule -->
         <div class="view-switch-capsule">
@@ -86,11 +91,16 @@
           </div>
         </div>
         <div class="status-cluster">
-          <!-- Live Audio Capture Toggle -->
-          <button id="adminAudioBtn" class="audio-capture-btn" title="Toggle Real-Time Audio Capture from VCV Rack">
-            <span class="audio-dot"></span>
-            <span class="audio-label">LIVE AUDIO: OFF</span>
-          </button>
+          <!-- Live Audio Capture Toggle & Device Selector -->
+          <div class="audio-control-cluster">
+            <button id="adminAudioBtn" class="audio-capture-btn" title="Toggle Real-Time Audio Capture from VCV Rack">
+              <span class="audio-dot"></span>
+              <span class="audio-label">LIVE AUDIO: OFF</span>
+            </button>
+            <select id="adminAudioDeviceSelect" class="audio-device-select" title="Select Audio Input Source">
+              <option value="default">Default Input (Mic / USB)</option>
+            </select>
+          </div>
 
           <div class="status-pill status-online">
             <span class="dot"></span>
