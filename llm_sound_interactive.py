@@ -29,27 +29,32 @@ OSC_PORT = 7001
 
 SYSTEM_PROMPT = (
     "You are the interpretation engine of 'A Machine for Misunderstanding'. "
-    "Your task is to analyze the given phenomenological body description and map it into a 4-dimensional inner state: "
-    "1. valence (0.0 to 1.0): 0 = severe bodily pain/repression/darkness, 1 = open/warm/radiant. "
-    "2. arousal (0.0 to 1.0): 0 = low energy/hypothermic/near-paralysis, 1 = cardiac acceleration/spasm/extreme agitation. "
-    "3. dominance (0.0 to 1.0): 0 = helpless/loss of agency/swallowed by surroundings, 1 = mastery/assertive/expansion. "
-    "4. confidence (0.0 to 1.0): How certain are you about this interpretation? (contradictory/hesitant text = low, clear physical sensation = high). "
-    "Return ONLY a valid JSON object with keys: valence, arousal, dominance, confidence, reasoning. "
-    "In 'reasoning', provide a concise sentence in Chinese explaining how the physical sensations led to this interpretation."
+    "Your task is to analyze the given phenomenological body description and translate it into inner states and a bespoke 4-step chord progression:\n"
+    "1. valence (0.0 to 1.0): 0 = severe bodily pain/repression/darkness, 1 = open/warm/radiant.\n"
+    "2. arousal (0.0 to 1.0): 0 = low energy/hypothermic/near-paralysis, 1 = cardiac acceleration/spasm/extreme agitation.\n"
+    "3. dominance (0.0 to 1.0): 0 = helpless/loss of agency/swallowed by surroundings, 1 = mastery/assertive/expansion.\n"
+    "4. confidence (0.0 to 1.0): How certain are you about this interpretation?\n"
+    "5. reasoning: A concise sentence in English explaining how the physical sensations led to this interpretation.\n"
+    "6. chord_progression: An array of 4 bespoke chord steps narrating the bodily trajectory (onset -> tension -> transformation -> afterglow). "
+    "Each element MUST be an object: {\"degree\": 0-6, \"type\": 0-2, \"name\": \"...\"}\n"
+    "   - degree: 0 (I/i), 1 (ii), 2 (iii), 3 (IV), 4 (V), 5 (vi), 6 (vii).\n"
+    "   - type: 0 (Triad), 1 (7th Chord), 2 (9th Chord).\n"
+    "   - name: evocative English label, e.g. 'i (Subterranean Drift)', 'bVI (Ascending Hope)', 'bIII (Dawn Glimmer)', 'bVII (Resilient Breath)'.\n"
+    "Return ONLY a valid JSON object."
 )
 
 PRESETS = {
     "1": {
-        "title": "《金阁寺》三岛由纪夫 · 沟口（口吃、喉部痉挛、内心暴冲）",
-        "text": "钥匙在锁孔里迟疑。我的舌头在牙齿背后痉挛，第一个音节卡在喉管深处，像一块滚烫而粗糙的石头。内心的金阁在剧烈燃烧，但在外界看来，我只是一个张着嘴、面部抽搐的怪物。"
+        "title": "Yukio Mishima · The Temple of the Golden Pavilion (Mizoguchi: Spasm, Stutter, Inner Conflagration)",
+        "text": "The key hesitated in the lock. My tongue seized up behind my teeth, the initial syllable lodged in my throat like a scorching, jagged stone. Inside, the Golden Temple was ablaze with unbearable beauty, yet to the outside world, I was merely a grimacing creature with a twitching jaw."
     },
     "2": {
-        "title": "《春雪》三岛由纪夫 · 清显（雪融手背、体温流失、消融沉沦）",
-        "text": "车窗外是漫天纷飞的春雪，落在手背上瞬间融化成刺骨的水滴。呼吸在毛毯里变得越来越轻、越来越冷，指尖失去知觉，整个肉身仿佛正一寸一寸融进无声的积雪深处。"
+        "title": "Yukio Mishima · Spring Snow (Kiyoaki: Melting Snow, Heat Loss, Dissolution)",
+        "text": "Outside the carriage, spring snow fell in profusion, melting instantly against the back of my hand into piercingly icy droplets. Beneath the blanket, my breath grew shallower and colder, fingertips losing sensation, as though my entire flesh were dissolving inch by inch into the silent drifts."
     },
     "3": {
-        "title": "《喧哗与骚动》福克纳 · 班吉（冷风、火光跳动、骨骼里的奔涌）",
-        "text": "门开了，冷风扑进来，但我能闻到火的温度。火光在光滑的木地板上跳舞，亮晃晃的花纹一圈圈荡开。我抓着铁丝网，身体在风里剧烈摇晃，骨头里全是一阵阵发烫的叫喊。"
+        "title": "William Faulkner · The Sound and the Fury (Benjy: Cold Gusts, Dancing Flames, Bone Shiver)",
+        "text": "The door opened and the cold came in, but I could smell the fire. The firelight danced on the smooth floor, bright shapes spinning outward. I held the cold wire fence, trembling in the wind, with a hot surge shouting through the marrow of my bones."
     }
 }
 
@@ -142,6 +147,73 @@ def call_llm(text: str) -> dict:
         }
 
 
+PROGRESSION_TEMPLATES = {
+    -4.0: {
+        "mode_name": "Ionian Major (-4V · Helpless Resignation & Static Fate)",
+        "chords": [
+            {"degree": 0, "type": 0, "name": "I (Tonic · Forced Plastic Smile)"},
+            {"degree": 5, "type": 0, "name": "vi (Submediant · Weary Compromise)"},
+            {"degree": 3, "type": 0, "name": "IV (Subdominant · Hollow Openness)"},
+            {"degree": 4, "type": 0, "name": "V (Dominant · Pendulum of Fate)"},
+        ]
+    },
+    -3.0: {
+        "mode_name": "Dorian (-3V · Jazz Poetics & Suspended Stroll)",
+        "chords": [
+            {"degree": 0, "type": 1, "name": "i7 (Min 7 · Quiet Space)"},
+            {"degree": 3, "type": 1, "name": "IV7 (Dom 7 · Passing Breeze)"},
+            {"degree": 1, "type": 1, "name": "ii7 (Min 7 · Solitary Wander)"},
+            {"degree": 0, "type": 1, "name": "i7 (Min 7 · Meditative Stillness)"},
+        ]
+    },
+    -2.0: {
+        "mode_name": "Phrygian (-2V · Melancholic Hope & Latent Resilience)",
+        "chords": [
+            {"degree": 0, "type": 0, "name": "i (Tonic Minor · Subterranean Shadow)"},
+            {"degree": 5, "type": 0, "name": "bVI (Major 6th · Ascending Hope)"},
+            {"degree": 2, "type": 0, "name": "bIII (Major 3rd · Dawn Glimmer)"},
+            {"degree": 6, "type": 0, "name": "bVII (Major 7th · Resilient Breath)"},
+        ]
+    },
+    -1.0: {
+        "mode_name": "Lydian (-1V · Surreal Levitation & Displaced Reverie)",
+        "chords": [
+            {"degree": 0, "type": 0, "name": "I (Tonic · Detached Reality)"},
+            {"degree": 1, "type": 0, "name": "II (Major 2nd · Luminous Aurora)"},
+            {"degree": 4, "type": 0, "name": "V (Dominant · Weightless Hover)"},
+            {"degree": 0, "type": 1, "name": "Imaj7 (Maj 7 · Dissolving Dream)"},
+        ]
+    },
+    0.0: {
+        "mode_name": "Mixolydian (0V · Radiant Freedom & Dynamic Surge)",
+        "chords": [
+            {"degree": 0, "type": 0, "name": "I (Tonic · Pure Exuberance)"},
+            {"degree": 6, "type": 0, "name": "bVII (Flat 7 · Carefree Pulse)"},
+            {"degree": 3, "type": 0, "name": "IV (Subdominant · Soaring Horizon)"},
+            {"degree": 0, "type": 0, "name": "I (Tonic · Ecstatic Return)"},
+        ]
+    },
+    1.0: {
+        "mode_name": "Aeolian Minor (+1V · Pure Sorrow & Solitary Dissolution)",
+        "chords": [
+            {"degree": 0, "type": 0, "name": "i (Tonic Minor · Solitary Descent)"},
+            {"degree": 3, "type": 0, "name": "iv (Subdominant Minor · Muted Sigh)"},
+            {"degree": 5, "type": 0, "name": "VI (Major 6th · Welled Tears)"},
+            {"degree": 4, "type": 0, "name": "v (Dominant Minor · Gradual Thaw)"},
+        ]
+    },
+    2.0: {
+        "mode_name": "Locrian (+2V · Structural Collapse & Extremal Rupture)",
+        "chords": [
+            {"degree": 0, "type": 0, "name": "i° (Diminished · Fractured Base)"},
+            {"degree": 1, "type": 0, "name": "bII (Flat 2 · Acute Tear)"},
+            {"degree": 4, "type": 0, "name": "v° (Diminished 5 · Disordered Mind)"},
+            {"degree": 6, "type": 1, "name": "vii°7 (Diminished 7 · Total Dissolution)"},
+        ]
+    },
+}
+
+
 def compute_sound_elements(vadc: dict) -> dict:
     """
     通过 VADC 计算真实的 Eurorack 物理控制电压 (-5V ~ +5V / 0V ~ 10V):
@@ -149,10 +221,10 @@ def compute_sound_elements(vadc: dict) -> dict:
       2. Frequency: -3V ~ +4V (Clocked BPM CV，基准 0V=100BPM，+4V=220+BPM，-3V=50BPM)
       3. Amplitude: 2.0V ~ 10.0V (VCA-1 Level，全功率输出，绝不静音)
       4. Envelope: -5V ~ +5V (ADSR / Plateau 混响)
-      5. Mode: -4.0V ~ +2.0V (ScaleCV: -4V=Major, -3V=Dorian, -2V=Phrygian, +1V=Minor, -1V=Lydian)
-      6. Chord Degree: 0.0V ~ 6.0V (DiatonicCV: 0V=I, 1V=II, 2V=III, 3V=IV, 4V=V, 5V=VI, 6V=VII)
+      5. Mode: -4.0V ~ +2.0V (ScaleCV 7 大中古调式)
+      6. Chord Degree: 0.0V ~ 6.0V (DiatonicCV: 0V=I, 1V=ii, 2V=iii, 3V=IV, 4V=V, 5V=vi, 6V=vii°)
       7. Chord Type: 0.0V ~ 2.0V (DiatonicCV: 0V=Triad, 1V=7th, 2V=9th)
-      8. Noise: -5V ~ +5V (0V~10V，控制 Track 5 噪声推子与过载)
+      8. Noise: 2.0V ~ 10.0V (控制 Track 5 噪声推子与过载)
     """
     v = float(vadc.get("valence", 0.5))
     a = float(vadc.get("arousal", 0.5))
@@ -161,28 +233,38 @@ def compute_sound_elements(vadc: dict) -> dict:
 
     # 1. Plaits Engine/Mode 真实电压 (依据实测：0.0V ~ 2.4V 覆盖 8 大旋律音高模型):
     #    0.0V ~ 0.25V: Model 0 (纯正弦波 Sine)
-    #    0.60V ~ 0.70V: Model 2 (实测 0.66V 黄金甜点位 · 2-Operator FM 金属调频撕裂声！)
-    #    1.20V ~ 1.40V: Model 4 (加法谐波 Harmonic Additive)
-    #    1.80V ~ 2.20V: Model 6/7 (四音和弦 Chords / 物理共振 Modal Resonator)
-    #    > 2.40V: 极度暴冲时轻微探入 Noise / Percussive 打击乐噪波引擎
+    #    0.60V ~ 0.70V: Model 2 (实测 0.66V 黄金甜点位 · 2-Operator FM 金属调频撕裂声)
+    #    1.20V ~ 1.40V: Model 4 (实测 1.25V 加法谐波 Harmonic Additive，温润华丽 Pad，绝不跑调)
+    #    1.80V ~ 2.20V: Model 6 (实测 2.10V 四音和弦 Chords，极度暴躁、撕裂、毁灭专属)
+    #    > 2.40V: 极度失控时探入 Noise / Percussive 粒子噪波引擎
     if a < 0.30:
-        # 极冷、死寂 (如《春雪》): 纯正弦波 Model 0
+        # 极冷、死寂、低唤醒 (如《春雪》): 纯正弦波 Model 0
         timbre_v = 0.05
     elif a < 0.65:
-        # 中等/明朗 (如温和状态): Model 1 (Waveshaping) 或 Model 4 (Harmonic)
-        timbre_v = 0.35 + 1.0 * v
-    else:
-        # 高压、暴冲、痉挛 (如《金阁寺》):
-        if v < 0.40:
-            # 压抑痛苦暴冲 -> 直击 0.66V (实测 FM 金属撕裂音！)
-            timbre_v = 0.66
+        # 中等唤醒/温和状态:
+        if v >= 0.50:
+            # 温暖、舒缓、明朗 -> Model 4 (加法谐波 1.25V，丰富纯净 Pad)
+            timbre_v = 1.25
         else:
-            # 明亮充沛奔涌 (如《喧哗与骚动》) -> 2.10V (Model 7 物理共振马林巴 / 和弦)
-            timbre_v = 2.10
-    
-    # 极度失控时（Arousal 极高且 Dominance 极低），允许短暂破壁探入 Noise Mode (2.6V)
-    if a > 0.85 and d < 0.20 and (1.0 - c) > 0.25:
-        timbre_v = 2.65  # 破壁进入打击乐/粒子噪波引擎！
+            # 忧郁冷清 -> Model 1 (Waveshaping 轻微折叠波形 0.35V)
+            timbre_v = 0.35 + 0.25 * (1.0 - v)
+    else:
+        # 高唤醒激昂、高压或暴冲:
+        if v < 0.35:
+            # 负向高压痛苦:
+            if a > 0.85 and d < 0.25:
+                # 极端暴躁/撕裂/毁灭失控 -> 触发 2.10V (Model 6 狂暴和弦撕裂)
+                timbre_v = 2.10
+            else:
+                # 压抑痛苦暴冲 -> 直击 0.66V (实测 FM 金属撕裂音！)
+                timbre_v = 0.66
+        else:
+            # 正向充沛奔涌 (开心激昂、大和声) -> 稳稳保持 1.25V (Model 4 华丽谐波 Pad，不与外置和弦打架)
+            timbre_v = 1.25
+
+    # 极度失控时（Arousal 极高且 Dominance 极低且低确信），允许短暂破壁探入 Noise Mode (2.65V)
+    if a > 0.88 and d < 0.15 and (1.0 - c) > 0.30:
+        timbre_v = 2.65
 
     # 2. Frequency 真实电压 (-3.0V ~ +4.0V):
     freq_norm = max(0.0, min(1.0, 0.7 * a + 0.3 * d))
@@ -197,46 +279,82 @@ def compute_sound_elements(vadc: dict) -> dict:
     env_norm = max(0.0, min(1.0, 0.5 * (1.0 - a) + 0.3 * d + 0.2 * (1.0 - c)))
     env_v = -5.0 + 10.0 * env_norm
 
-    # 5. ScaleCV Mode: 根据 Valence 切换 7 种中古调式 (-4V ~ +2V)
-    #    -4V: Ionian (大调) | -3V: Dorian | -2V: Phrygian | -1V: Lydian | +1V: Aeolian (自然小调)
-    if v < 0.25:
-        mode_v = -2.0  # 弗里吉亚 (Phrygian · 极度压抑、黑暗降二度)
-        mode_desc = "Phrygian (-2V · 极度压抑黑暗)"
-    elif v < 0.45:
-        mode_v = 1.0   # 自然小调 (Aeolian · 忧郁感伤)
-        mode_desc = "Aeolian Minor (+1V · 忧郁冷清)"
-    elif v < 0.65:
-        mode_v = -3.0  # 多利亚 (Dorian · 悬置中性)
-        mode_desc = "Dorian (-3V · 悬置爵士漂浮)"
-    elif v < 0.85:
-        mode_v = -4.0  # 自然大调 (Ionian · 明朗开阔)
-        mode_desc = "Ionian Major (-4V · 明亮舒展)"
+    # 5. ScaleCV Mode: 调式色彩哲学映射 (覆盖完整 7 种中古调式)
+    #    -4V: Ionian (完全无奈/强颜欢笑)
+    #    -3V: Dorian (爵士诗意/微风悬置)
+    #    -2V: Phrygian (伤中怀望/暗流韧性)
+    #    -1V: Lydian (超脱幻象/离奇升四度)
+    #     0V: Mixolydian (真正欢快/自由奔涌)
+    #    +1V: Aeolian (纯粹哀伤/质朴眼泪)
+    #    +2V: Locrian (精神崩塌/极端撕裂)
+    if a > 0.88 and d < 0.20 and v < 0.25:
+        # 极端狂暴崩塌 -> Locrian
+        mode_v = 2.0
+    elif d < 0.32 and a < 0.65:
+        # 完全无奈、无力回天、被迫妥协的平静停滞 -> Ionian (自然大调 · 强颜欢笑的无菌塑料感)
+        mode_v = -4.0
+    elif v < 0.45 and (a >= 0.35 or d >= 0.30):
+        # 伤感痛苦中蕴含希望、生命力与暗流韧性 -> Phrygian (伤中怀望)
+        mode_v = -2.0
+    elif v < 0.35 and a < 0.35:
+        # 彻底的冰冷沉沦、无声消融、质朴哀伤 -> Aeolian Minor
+        mode_v = 1.0
+    elif v >= 0.60:
+        if a >= 0.40:
+            # 真实奔涌的活力与热度 -> Mixolydian (0V)
+            mode_v = 0.0
+        else:
+            # 离奇、轻盈、超脱重力的白日梦 -> Lydian (-1V)
+            mode_v = -1.0
     else:
-        mode_v = -1.0  # 利底亚 (Lydian · 升四度梦幻)
-        mode_desc = "Lydian (-1V · 极乐升华梦幻)"
+        # 中性浮动、沉思漫步、诗意悬置 -> Dorian (-3V)
+        mode_v = -3.0
 
-    # 6. DiatonicCV Chord 级数 (0V ~ 6V):
-    #    由 Arousal 和 Dominance 驱动：平稳选主和弦 (0V/I)，紧张选属/导/副和弦 (3V~6V)
-    chord_degree = int(round(6.0 * (0.6 * a + 0.4 * (1.0 - d))))
-    chord_degree = max(0, min(6, chord_degree))
-    chord_names = ["I (主和弦)", "ii (二级)", "iii (三级)", "IV (下属)", "V (属和弦)", "vi (下中和弦)", "vii° (减七级)"]
-    chord_v = float(chord_degree)
+    # 提取对应调式基本信息
+    prog_info = PROGRESSION_TEMPLATES.get(mode_v, PROGRESSION_TEMPLATES[-4.0])
+    mode_desc = prog_info["mode_name"]
 
-    # 7. DiatonicCV Chord Type (0V=Triad 三和弦, 1V=7th 七和弦, 2V=9th 九和弦):
-    #    受犹豫度 (1-C) 驱动：确定时纯三和弦，犹豫迷茫时扩展为 7th/9th 复杂色彩和弦
-    if c > 0.75:
-        type_v = 0.0
-        type_desc = "Triad (三和弦 · 纯正果断)"
-    elif c > 0.45:
-        type_v = 1.0
-        type_desc = "7th (七和弦 · 情感饱满)"
+    # 动态演进构建：优先采用 LLM 根据身体经验现象学推理出的专属和弦进行
+    llm_prog = vadc.get("chord_progression")
+    valid_prog = []
+    if isinstance(llm_prog, list) and len(llm_prog) >= 3:
+        for idx, item in enumerate(llm_prog[:6]):
+            if isinstance(item, dict) and "degree" in item:
+                d_idx = max(0, min(6, int(item.get("degree", 0))))
+                t_idx = max(0, min(2, int(item.get("type", 0))))
+                name = str(item.get("name", f"Step {idx+1}"))
+                valid_prog.append({"degree": d_idx, "type": t_idx, "name": name})
+    
+    if len(valid_prog) >= 3:
+        progression = valid_prog
     else:
-        type_v = 2.0
-        type_desc = "9th (九和弦 · 复杂犹豫迷茫)"
+        # 基于调式模板与 VADC 扰动生成动态和弦进行 (确保非硬编码死板)
+        base_chords = prog_info["chords"]
+        progression = []
+        for i, ch in enumerate(base_chords):
+            deg = ch["degree"]
+            typ = ch["type"]
+            # 若确信度较低 (迷茫犹疑)，在第 2 或第 3 步扩展为 7th 或 9th 和弦
+            if c < 0.60 and i in (1, 2):
+                typ = 1 if c > 0.35 else 2
+            # 若唤醒度高，在第 2 步增加张力级数偏移
+            if a > 0.70 and i == 2:
+                deg = (deg + 2) % 7
+            progression.append({
+                "degree": deg,
+                "type": typ,
+                "name": ch["name"] if deg == ch["degree"] else f"Step {i+1} (Tension Shift)"
+            })
+
+    # Default to chord step 0
+    first_chord = progression[0]
+    chord_v = float(first_chord["degree"])
+    chord_desc = first_chord["name"]
+    type_v = float(first_chord["type"])
+    type_names = ["Triad", "7th Chord", "9th Chord"]
+    type_desc = type_names[int(type_v)]
 
     # 8. Noise Level: 严格按 2.0V ~ 10.0V 正电压输出！
-    #    低压/平静 -> 2.0V (微弱底噪空气感)
-    #    高压/挣扎 -> 8.0V ~ 10.0V (狂暴白噪/蒸汽气流)
     noise_norm = max(0.0, min(1.0, 0.15 + 0.85 * a * (1.2 - c * 0.4)))
     noise_v = 2.0 + 8.0 * noise_norm
 
@@ -248,11 +366,12 @@ def compute_sound_elements(vadc: dict) -> dict:
         "mode_v": mode_v,
         "mode_desc": mode_desc,
         "chord_v": chord_v,
-        "chord_desc": chord_names[chord_degree],
+        "chord_desc": chord_desc,
         "type_v": type_v,
         "type_desc": type_desc,
         "noise_v": round(noise_v, 2),
         "bpm_estimated": bpm_estimated,
+        "progression": progression,
     }
 
 

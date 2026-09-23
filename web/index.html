@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>A Machine for Misunderstanding · Acoustic Resonant Topology</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Noto+Serif+SC:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ========================================================
+       1. PRESENT MODE (Exhibition & Pure Generative Art)
+       Warm Ivory Xuan Paper (#f8f6f0), fluid visual aesthetics,
+       frequency-driven particle field, zero technical jargon
+       ======================================================== -->
+  <div id="presentView" class="view-container active">
+    <!-- p5.js Full-bleed Canvas Container -->
+    <div id="canvasContainer"></div>
+
+    <!-- Floating Minimalist Top Bar -->
+    <header class="present-top-bar">
+      <div class="present-brand">
+        <h1 class="present-brand-en">A MACHINE FOR MISUNDERSTANDING</h1>
+        <p class="present-brand-cn">Phenomenological Somatic Translation ↔ Modular Acoustic Topology</p>
+      </div>
+
+      <!-- Mode Switch Capsule -->
+      <div class="view-switch-capsule">
+        <button class="switch-btn active" data-target="present">PRESENT</button>
+        <button class="switch-btn" data-target="admin">ADMIN</button>
+      </div>
+    </header>
+
+    <!-- Floating Minimalist Somatic Input Dock -->
+    <div class="present-dock">
+      <!-- Literature Excerpt Presets -->
+      <div class="present-presets" id="presentPresets">
+        <button class="present-preset-chip active" data-id="1">Mishima · Golden Pavilion</button>
+        <button class="present-preset-chip" data-id="2">Mishima · Spring Snow</button>
+        <button class="present-preset-chip" data-id="3">Faulkner · Sound & Fury</button>
+        <button class="present-preset-chip" data-id="custom">Free Flow</button>
+      </div>
+
+      <!-- Text Input & Transmutation Action -->
+      <div class="present-input-wrap">
+        <textarea id="presentTextInput" rows="2" placeholder="Enter first-person somatic experience (e.g., throat constriction, sudden tachycardia, cold fingertips, spatial asphyxiation)..."></textarea>
+        <button id="presentTransmuteBtn" class="present-transmute-btn">
+          <span class="btn-primary-text">TRANSMUTE</span>
+          <span class="btn-sub-text">RESONATE</span>
+        </button>
+      </div>
+
+      <!-- Non-intrusive Resonance Pulse Indicator -->
+      <div class="present-status-row">
+        <span class="pulse-dot"></span>
+        <span id="presentStatusHint" class="status-hint">Acoustic topological resonance active · 10s autonomous progression</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ========================================================
+       2. ADMIN MODE (Modular Engineering Dashboard)
+       Complete 8-channel CV telemetry, 4D sliders, and history log
+       ======================================================== -->
+  <div id="adminView" class="view-container">
+    <div class="app-container">
+      <!-- Header Navigation -->
+      <header class="top-nav">
+        <div class="brand">
+          <div class="logo-pulse"></div>
+          <div>
+            <h1 class="brand-title">A MACHINE FOR MISUNDERSTANDING [ADMIN]</h1>
+            <p class="brand-sub">Phenomenological Somatic Translation ↔ VCV Rack Acoustic Center</p>
+          </div>
+        </div>
+        <div class="status-cluster">
+          <div class="status-pill status-online">
+            <span class="dot"></span>
+            <span class="label">OSC: 127.0.0.1:7001</span>
+          </div>
+          <div class="status-pill status-bpm">
+            <span class="label">BPM:</span>
+            <span id="headerBpm" class="val-highlight">157</span>
+          </div>
+          <div class="status-pill status-mode">
+            <span id="headerMode" class="val-highlight">Ionian Major (-4V)</span>
+          </div>
+
+          <!-- Mode Switch Capsule -->
+          <div class="view-switch-capsule">
+            <button class="switch-btn" data-target="present">PRESENT</button>
+            <button class="switch-btn active" data-target="admin">ADMIN</button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Grid -->
+      <main class="main-grid">
+        <!-- Left Column: Input & Affective Dimensions -->
+        <section class="grid-col left-col">
+          <!-- Panel 01: Somatic Text Ingress -->
+          <div class="card panel-ingress">
+            <div class="card-header">
+              <div class="header-tag">01 / INGRESS</div>
+              <h2>Phenomenological Somatic Ingress</h2>
+            </div>
+            
+            <div class="preset-selector">
+              <span class="preset-label">Canonical Excerpts:</span>
+              <div class="preset-buttons" id="presetButtons">
+                <button class="preset-btn active" data-id="1">Mishima: Golden Pavilion</button>
+                <button class="preset-btn" data-id="2">Mishima: Spring Snow</button>
+                <button class="preset-btn" data-id="3">Faulkner: Sound & Fury</button>
+                <button class="preset-btn" data-id="custom">Custom Blank</button>
+              </div>
+            </div>
+
+            <div class="input-wrapper">
+              <textarea id="bodyTextInput" rows="4" placeholder="Enter first-person somatic description (respiration, throat spasm, thermal dissipation, tachycardia, muscle constriction, spatial asphyxiation)..."></textarea>
+              <div class="input-footer">
+                <span id="charCount">0 chars</span>
+                <button id="interpretBtn" class="btn-primary">
+                  <span class="btn-icon">⚡</span>
+                  <span class="btn-text">Translate & Drive VCV Rack</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Blackbox Reasoning Card -->
+            <div class="interpretation-box">
+              <div class="interp-header">
+                <span class="interp-tag">MACHINE INTERPRETATION (DEEPSEEK VADC)</span>
+                <span id="interpLatency" class="interp-latency">Ready</span>
+              </div>
+              <p id="interpReasoning" class="interp-text">System ready. Select a preset or input somatic text to awaken machine translation.</p>
+            </div>
+          </div>
+
+          <!-- Panel 02: 4D Affective Vector Space -->
+          <div class="card panel-vadc">
+            <div class="card-header">
+              <div class="header-tag">02 / AFFECTIVE SPACE</div>
+              <h2>4D Affective Vector Space (Real-time Slider Modulation)</h2>
+            </div>
+
+            <div class="sliders-list">
+              <!-- Valence -->
+              <div class="slider-group">
+                <div class="slider-label-row">
+                  <span class="axis-name">VALENCE</span>
+                  <span class="axis-sub">Agony / Spasm ↔ Warmth / Radiance</span>
+                  <span id="valValence" class="axis-value">0.50</span>
+                </div>
+                <input type="range" id="sliderValence" min="0" max="1" step="0.01" value="0.5" class="range-slider slider-valence">
+              </div>
+
+              <!-- Arousal -->
+              <div class="slider-group">
+                <div class="slider-label-row">
+                  <span class="axis-name">AROUSAL</span>
+                  <span class="axis-sub">Hypothermic Stupor ↔ Frenzied Shiver</span>
+                  <span id="valArousal" class="axis-value">0.50</span>
+                </div>
+                <input type="range" id="sliderArousal" min="0" max="1" step="0.01" value="0.5" class="range-slider slider-arousal">
+              </div>
+
+              <!-- Dominance -->
+              <div class="slider-group">
+                <div class="slider-label-row">
+                  <span class="axis-name">DOMINANCE</span>
+                  <span class="axis-sub">Helpless Collapse ↔ Sovereign Expansion</span>
+                  <span id="valDominance" class="axis-value">0.50</span>
+                </div>
+                <input type="range" id="sliderDominance" min="0" max="1" step="0.01" value="0.5" class="range-slider slider-dominance">
+              </div>
+
+              <!-- Confidence -->
+              <div class="slider-group">
+                <div class="slider-label-row">
+                  <span class="axis-name">CONFIDENCE</span>
+                  <span class="axis-sub">Ambivalence / Drift ↔ Decisive Clarity</span>
+                  <span id="valConfidence" class="axis-value">0.70</span>
+                </div>
+                <input type="range" id="sliderConfidence" min="0" max="1" step="0.01" value="0.7" class="range-slider slider-confidence">
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Right Column: Physical Voltages & Modular Engine -->
+        <section class="grid-col right-col">
+          <!-- Panel 03: Eurorack 8-Channel CV Telemetry & Control -->
+          <div class="card panel-rack">
+            <div class="card-header">
+              <div class="header-tag">03 / MODULAR RACK MATRIX</div>
+              <h2>Eurorack Physical Control Voltages & Modal Chords (8 Channels)</h2>
+            </div>
+
+            <div class="cv-grid">
+              <!-- CH 1: Timbre -->
+              <div class="cv-cell" id="cellTimbre">
+                <div class="cell-head">
+                  <span class="ch-badge">CH 1</span>
+                  <span class="ch-path">/param/timbre</span>
+                  <span class="ch-val" id="cvValTimbre">1.25 V</span>
+                </div>
+                <div class="ch-title">Plaits Timbre & Model</div>
+                <div class="ch-desc" id="cvDescTimbre">Model 4 (Harmonic Additive Pad)</div>
+                <input type="range" id="sliderCvTimbre" min="0" max="2.65" step="0.01" value="1.25" class="cv-slider">
+              </div>
+
+              <!-- CH 2: Frequency -->
+              <div class="cv-cell" id="cellFrequency">
+                <div class="cell-head">
+                  <span class="ch-badge">CH 2</span>
+                  <span class="ch-path">/param/frequency</span>
+                  <span class="ch-val" id="cvValFrequency">+1.41 V</span>
+                </div>
+                <div class="ch-title">Clocked BPM (Cardiac Pulse)</div>
+                <div class="ch-desc" id="cvDescFrequency">157 BPM (Dense Rhythmic Pulse)</div>
+                <input type="range" id="sliderCvFrequency" min="-3" max="4" step="0.05" value="1.41" class="cv-slider">
+              </div>
+
+              <!-- CH 3: Amplitude -->
+              <div class="cv-cell" id="cellAmplitude">
+                <div class="cell-head">
+                  <span class="ch-badge">CH 3</span>
+                  <span class="ch-path">/param/amplitude</span>
+                  <span class="ch-val" id="cvValAmplitude">8.04 V</span>
+                </div>
+                <div class="ch-title">VCA-1 Level (Master Gain)</div>
+                <div class="ch-desc">Full Scale · Non-silent</div>
+                <input type="range" id="sliderCvAmplitude" min="2" max="10" step="0.1" value="8.04" class="cv-slider">
+              </div>
+
+              <!-- CH 4: Envelope -->
+              <div class="cv-cell" id="cellEnvelope">
+                <div class="cell-head">
+                  <span class="ch-badge">CH 4</span>
+                  <span class="ch-path">/param/envelope</span>
+                  <span class="ch-val" id="cvValEnvelope">-0.70 V</span>
+                </div>
+                <div class="ch-title">Plateau Decay / ADSR</div>
+                <div class="ch-desc">Spatial Reverb Dissipation</div>
+                <input type="range" id="sliderCvEnvelope" min="-5" max="5" step="0.1" value="-0.7" class="cv-slider">
+              </div>
+
+              <!-- CH 5: ScaleCV Mode -->
+              <div class="cv-cell highlight-cell" id="cellMode">
+                <div class="cell-head">
+                  <span class="ch-badge">CH 5</span>
+                  <span class="ch-path">/param/mode</span>
+                  <span class="ch-val" id="cvValMode">-4.00 V</span>
+                </div>
+                <div class="ch-title">ScaleCV Mode Selection (7 Modal Spectra)</div>
+                <div class="ch-desc highlight-text" id="cvDescMode">Ionian Major (-4V · Helpless Resignation & Static Fate)</div>
+                <div class="mode-pills">
+                  <button class="mode-pill active" data-v="-4.0">Ionian (-4V · Resigned)</button>
+                  <button class="mode-pill" data-v="-3.0">Dorian (-3V · Poetic)</button>
+                  <button class="mode-pill" data-v="-2.0">Phrygian (-2V · Resilient)</button>
+                  <button class="mode-pill" data-v="-1.0">Lydian (-1V · Surreal)</button>
+                  <button class="mode-pill" data-v="0.0">Mixolydian (0V · Radiant)</button>
+                  <button class="mode-pill" data-v="1.0">Aeolian (+1V · Sorrow)</button>
+                  <button class="mode-pill" data-v="2.0">Locrian (+2V · Collapse)</button>
+                </div>
+              </div>
+
+              <!-- CH 6 & 7: Chord Progression -->
+              <div class="cv-cell highlight-cell full-width-cell" id="cellChord">
+                <div class="cell-head">
+                  <span class="ch-badge">CH 6 & 7</span>
+                  <span class="ch-path">/param/chord & type</span>
+                  <span class="ch-val" id="cvValChord">IV · Triad</span>
+                </div>
+                <div class="ch-title-row">
+                  <span class="ch-title">Autonomous Chord Progression Sequencer</span>
+                  <div class="progression-controls">
+                    <button id="toggleProgressionBtn" class="prog-toggle-btn active">⏸ Auto-Progressing</button>
+                    <select id="progSpeedSelect" class="prog-speed-select">
+                      <option value="6.0">Step 6.0s (Fluid)</option>
+                      <option value="10.0" selected>Step 10.0s (Standard · Spatial Breathing)</option>
+                      <option value="15.0">Step 15.0s (Slow · Meditative)</option>
+                      <option value="20.0">Step 20.0s (Ultra-extended · Drone Micro-shift)</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="ch-desc highlight-text" id="cvDescChord">Current Chord: IV (Subdominant) · Triad</div>
+                
+                <!-- 4-Step Progression Track -->
+                <div class="progression-track" id="progressionTrack">
+                  <!-- Dynamically rendered by app.js -->
+                </div>
+
+                <!-- Manual Chord Fallback Overrides -->
+                <div class="chord-selector">
+                  <select id="selectChordDegree" class="app-select">
+                    <option value="0">I (Tonic - 0V)</option>
+                    <option value="1">ii (Supertonic - 1V)</option>
+                    <option value="2">iii (Mediant - 2V)</option>
+                    <option value="3">IV (Subdominant - 3V)</option>
+                    <option value="4">V (Dominant - 4V)</option>
+                    <option value="5">vi (Submediant - 5V)</option>
+                    <option value="6">vii° (Diminished - 6V)</option>
+                  </select>
+                  <select id="selectChordType" class="app-select">
+                    <option value="0">Triad (0V)</option>
+                    <option value="1">7th Chord (1V)</option>
+                    <option value="2">9th Chord (2V)</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- CH 8: Noise Level -->
+              <div class="cv-cell" id="cellNoise">
+                <div class="cell-head">
+                  <span class="ch-badge">CH 8</span>
+                  <span class="ch-path">/param/noise</span>
+                  <span class="ch-val" id="cvValNoise">6.63 V</span>
+                </div>
+                <div class="ch-title">MixMaster Track 5 Noise Level</div>
+                <div class="ch-desc">Granular Burst & White Noise Overdrive Fader</div>
+                <input type="range" id="sliderCvNoise" min="2" max="10" step="0.1" value="6.63" class="cv-slider">
+              </div>
+            </div>
+          </div>
+
+          <!-- Panel 04: Translation Gap History Log -->
+          <div class="card panel-history">
+            <div class="card-header">
+              <div class="header-tag">04 / COMMUNICATION GAP LOG</div>
+              <h2>Translation Audit History (Empirical Comparison & Double-Blind Review)</h2>
+            </div>
+            <div class="history-list" id="historyList">
+              <div class="history-loading">Loading history log...</div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- Bottom Status Bar -->
+      <footer class="bottom-bar">
+        <span>Project 2: A Machine for Misunderstanding · Rex Li Portfolio</span>
+        <span>VCV Rack ↔ Max ↔ DeepSeek VAD Phenomenology Bridge</span>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="p5.min.js"></script>
+  <script src="visualizer.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
