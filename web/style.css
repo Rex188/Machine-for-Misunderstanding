@@ -827,6 +827,8 @@ textarea#bodyTextInput:focus {
   letter-spacing: 0.08em;
   color: #7c828d;
   margin: 0;
+}
+
 .present-top-actions {
   pointer-events: auto;
   display: flex;

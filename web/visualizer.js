@@ -341,16 +341,6 @@ function initSketch() {
       p.strokeWeight(0.6);
       p.line(scopeStartX, horizonY, scopeStartX + scopeWidth, horizonY);
 
-      // Registration Labels
-      p.noStroke();
-      p.fill(primaryColor.levels[0], primaryColor.levels[1], primaryColor.levels[2], 75);
-      p.textFont('JetBrains Mono');
-      p.textSize(8.5);
-      p.text(hasLiveAudio ? 'SCOPE // 48kHz LIVE PCM (VCV RACK)' : 'SCOPE // STANDBY SYNTHESIS', scopeStartX, horizonY - 14);
-      p.textAlign(p.RIGHT);
-      p.text(hasLiveAudio ? `RMS: ${(window.AUDIO_ENGINE.rms * 100).toFixed(1)}%` : '0.00 V REF', scopeStartX + scopeWidth, horizonY - 14);
-      p.textAlign(p.LEFT);
-
       // Draw Oscilloscope Traces
       const timeBuffer = (hasLiveAudio && window.AUDIO_ENGINE.timeData) ? window.AUDIO_ENGINE.timeData : null;
       const sampleSteps = 240;
