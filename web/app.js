@@ -74,6 +74,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const historyList = document.getElementById('historyList');
 
+  // Live Audio Capture Controls
+  const presentAudioBtn = document.getElementById('presentAudioBtn');
+  const adminAudioBtn = document.getElementById('adminAudioBtn');
+
+  async function handleAudioToggle() {
+    if (window.AUDIO_ENGINE) {
+      const active = await window.AUDIO_ENGINE.toggle();
+      updateAudioButtons(active);
+    }
+  }
+
+  function updateAudioButtons(active) {
+    [presentAudioBtn, adminAudioBtn].forEach(btn => {
+      if (btn) {
+        btn.classList.toggle('active', active);
+        const label = btn.querySelector('.audio-label');
+        if (label) {
+          label.textContent = active ? 'LIVE AUDIO: ON' : 'LIVE AUDIO: OFF';
+        }
+      }
+    });
+  }
+
+  if (presentAudioBtn) presentAudioBtn.addEventListener('click', handleAudioToggle);
+  if (adminAudioBtn) adminAudioBtn.addEventListener('click', handleAudioToggle);
+
   let presetsCache = {};
   let debounceVadcTimer = null;
   let currentProgressionEnabled = true;

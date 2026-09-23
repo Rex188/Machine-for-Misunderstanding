@@ -27,10 +27,18 @@
         <p class="present-brand-cn">Phenomenological Somatic Translation ↔ Modular Acoustic Topology</p>
       </div>
 
-      <!-- Mode Switch Capsule -->
-      <div class="view-switch-capsule">
-        <button class="switch-btn active" data-target="present">PRESENT</button>
-        <button class="switch-btn" data-target="admin">ADMIN</button>
+      <div class="present-top-actions">
+        <!-- Live Audio Capture Toggle -->
+        <button id="presentAudioBtn" class="audio-capture-btn" title="Toggle Real-Time Audio Capture from VCV Rack">
+          <span class="audio-dot"></span>
+          <span class="audio-label">LIVE AUDIO: OFF</span>
+        </button>
+
+        <!-- Mode Switch Capsule -->
+        <div class="view-switch-capsule">
+          <button class="switch-btn active" data-target="present">PRESENT</button>
+          <button class="switch-btn" data-target="admin">ADMIN</button>
+        </div>
       </div>
     </header>
 
@@ -78,6 +86,12 @@
           </div>
         </div>
         <div class="status-cluster">
+          <!-- Live Audio Capture Toggle -->
+          <button id="adminAudioBtn" class="audio-capture-btn" title="Toggle Real-Time Audio Capture from VCV Rack">
+            <span class="audio-dot"></span>
+            <span class="audio-label">LIVE AUDIO: OFF</span>
+          </button>
+
           <div class="status-pill status-online">
             <span class="dot"></span>
             <span class="label">OSC: 127.0.0.1:7001</span>
