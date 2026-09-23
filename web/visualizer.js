@@ -245,30 +245,25 @@ function initSketch() {
       p.rect(0, 0, p.width, p.height);
 
       // ========================================================
-      // Layer 0: Spectral Energy Heatmap & Somatic Thermal Wash
+      // Layer 0: Subtle Ambient Thermal Wash (Seamless Ink Bleed, No Hard Circles)
       // ========================================================
       p.push();
       const hasLiveAudio = window.AUDIO_ENGINE.active;
       const bassPow = hasLiveAudio ? window.AUDIO_ENGINE.bassEnergy : p.map(curAmp, 2, 10, 0.1, 0.6);
-      const midPow = hasLiveAudio ? window.AUDIO_ENGINE.midEnergy : p.map(curTimbre, 0, 2.5, 0.1, 0.7);
       const thermalRms = hasLiveAudio ? window.AUDIO_ENGINE.smoothedRms : p.map(curAmp, 2, 10, 0.05, 0.35);
 
-      // Deep Sub-Bass Thermal Core (Lower Canvas)
-      const heatRadius = p.map(bassPow, 0, 1, 140, 520);
-      const heatAlpha = p.map(bassPow, 0, 1, 12, 55);
+      // Atmospheric Vertical Thermal Ink Bleed rising softly from the lower horizon
+      const washAlpha = p.map(bassPow, 0, 1, 4, 18) + thermalRms * 12;
+      const washH = p.height * 0.42;
+      const washY = p.height - washH;
       p.noStroke();
-      p.fill(primaryColor.levels[0], primaryColor.levels[1], primaryColor.levels[2], heatAlpha);
-      p.circle(p.width * 0.5, p.height * 0.70, heatRadius * 1.6);
-
-      // Atmospheric Mid/High Thermal Contour Rings (Isobaric Sound Pressure)
-      p.noFill();
-      const numContours = 3;
-      for (let c = 1; c <= numContours; c++) {
-        const ringRad = (240 + c * 90) * (1.0 + thermalRms * 0.8);
-        const ringAlpha = p.map(midPow, 0, 1, 8, 38) / c;
-        p.stroke(accentColor.levels[0], accentColor.levels[1], accentColor.levels[2], ringAlpha);
-        p.strokeWeight(0.8);
-        p.circle(p.width * 0.5, p.height * 0.5, ringRad);
+      const washSteps = 6;
+      for (let s = 0; s < washSteps; s++) {
+        const segY = washY + (s / washSteps) * washH;
+        const segH = (washH / washSteps) + 4;
+        const segA = (s / washSteps) * washAlpha;
+        p.fill(primaryColor.levels[0], primaryColor.levels[1], primaryColor.levels[2], segA);
+        p.rect(0, segY, p.width, segH);
       }
       p.pop();
 
@@ -328,57 +323,63 @@ function initSketch() {
       p.pop();
 
       // ========================================================
-      // Layer 2: Horizon Precision Vector Scope (Real Audio Waveform)
+      // Layer 2: Background Horizon Waveform (High Gain, Subtle Ink Presence)
       // ========================================================
       p.push();
-      const horizonY = p.height * 0.72;
-      const scopeWidth = p.width - 96;
-      const scopeStartX = 48;
-      const scopeHeight = p.height * 0.16;
+      // Lowered to the background horizon floor (y = 0.84) to cradle the central topology seamlessly
+      const horizonY = p.height * 0.84;
+      const scopeStartX = 0;
+      const scopeWidth = p.width;
+      const scopeHeight = p.height * 0.12;
 
-      // Subtle Zero-Crossing Reference Line
-      p.stroke(primaryColor.levels[0], primaryColor.levels[1], primaryColor.levels[2], 30);
-      p.strokeWeight(0.6);
-      p.line(scopeStartX, horizonY, scopeStartX + scopeWidth, horizonY);
-
-      // Draw Oscilloscope Traces
+      // Draw High-Gain Oscilloscope Traces with Smooth Hann-Window Edge Tapering
       const timeBuffer = (hasLiveAudio && window.AUDIO_ENGINE.timeData) ? window.AUDIO_ENGINE.timeData : null;
-      const sampleSteps = 240;
+      const sampleSteps = 280;
 
-      // 1. Ghost Persistence Trail (Phosphor / Ink Bleed)
+      // 1. Ghost Shimmer Trace (Soft Phosphor Bleed)
       p.noFill();
-      p.stroke(accentColor.levels[0], accentColor.levels[1], accentColor.levels[2], 40);
-      p.strokeWeight(0.5);
+      p.stroke(accentColor.levels[0], accentColor.levels[1], accentColor.levels[2], 35);
+      p.strokeWeight(0.6);
       p.beginShape();
       for (let s = 0; s <= sampleSteps; s++) {
         const u = s / sampleSteps;
         const x = scopeStartX + u * scopeWidth;
-        let yOffset = 0;
+        const edgeWindow = p.sin(u * p.PI); // Smooth 0 -> 1 -> 0 taper so waveform emerges gently from borders
+
+        let rawVal = 0;
         if (timeBuffer) {
           const idx = p.floor(u * (timeBuffer.length - 1));
-          yOffset = ((timeBuffer[idx] - 128) / 128.0) * scopeHeight;
+          rawVal = (timeBuffer[idx] - 128) / 128.0;
         } else {
-          // Mathematical standby carrier
-          yOffset = p.sin(u * 22.0 + p.frameCount * 0.08) * (scopeHeight * 0.22) * (curAmp / 10.0);
+          rawVal = p.sin(u * 16.0 + p.frameCount * 0.05) * 0.15;
         }
+
+        // Responsive 5.5x gain with smooth hyperbolic tangent saturation
+        const boosted = Math.tanh(rawVal * 5.5);
+        const yOffset = boosted * (scopeHeight * 1.1) * edgeWindow;
         p.curveVertex(x, horizonY + yOffset + 1.2);
       }
       p.endShape();
 
       // 2. Primary Hairline Vector Waveform
-      p.stroke(primaryColor.levels[0], primaryColor.levels[1], primaryColor.levels[2], 180);
-      p.strokeWeight(1.0);
+      p.stroke(primaryColor.levels[0], primaryColor.levels[1], primaryColor.levels[2], 95);
+      p.strokeWeight(0.9);
       p.beginShape();
       for (let s = 0; s <= sampleSteps; s++) {
         const u = s / sampleSteps;
         const x = scopeStartX + u * scopeWidth;
-        let yOffset = 0;
+        const edgeWindow = p.sin(u * p.PI);
+
+        let rawVal = 0;
         if (timeBuffer) {
           const idx = p.floor(u * (timeBuffer.length - 1));
-          yOffset = ((timeBuffer[idx] - 128) / 128.0) * scopeHeight;
+          rawVal = (timeBuffer[idx] - 128) / 128.0;
         } else {
-          yOffset = p.sin(u * 22.0 + p.frameCount * 0.08) * (scopeHeight * 0.22) * (curAmp / 10.0);
+          rawVal = p.sin(u * 16.0 + p.frameCount * 0.05) * 0.15;
         }
+
+        const boosted = Math.tanh(rawVal * 5.5);
+        const yOffset = boosted * (scopeHeight * 1.1) * edgeWindow;
         p.curveVertex(x, horizonY + yOffset);
       }
       p.endShape();
