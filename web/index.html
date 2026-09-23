@@ -47,8 +47,13 @@
       </div>
     </header>
 
-    <!-- Floating Minimalist Somatic Input Dock -->
-    <div class="present-dock">
+    <!-- Floating Minimalist Somatic Side Dock (Positioned to Right Margin) -->
+    <div class="present-dock" id="presentDock">
+      <div class="present-dock-header">
+        <span class="dock-title">SOMATIC INPUT</span>
+        <button id="dockMinimizeBtn" class="dock-minimize-btn" title="Minimize to Corner">—</button>
+      </div>
+
       <!-- Literature Excerpt Presets -->
       <div class="present-presets" id="presentPresets">
         <button class="present-preset-chip active" data-id="1">Mishima · Golden Pavilion</button>
@@ -59,7 +64,7 @@
 
       <!-- Text Input & Transmutation Action -->
       <div class="present-input-wrap">
-        <textarea id="presentTextInput" rows="2" placeholder="Enter first-person somatic experience (e.g., throat constriction, sudden tachycardia, cold fingertips, spatial asphyxiation)..."></textarea>
+        <textarea id="presentTextInput" rows="2" placeholder="Enter first-person somatic experience (e.g., throat constriction, sudden tachycardia, cold fingertips)..."></textarea>
         <button id="presentTransmuteBtn" class="present-transmute-btn">
           <span class="btn-primary-text">TRANSMUTE</span>
           <span class="btn-sub-text">RESONATE</span>
@@ -69,9 +74,15 @@
       <!-- Non-intrusive Resonance Pulse Indicator -->
       <div class="present-status-row">
         <span class="pulse-dot"></span>
-        <span id="presentStatusHint" class="status-hint">Acoustic topological resonance active · 10s autonomous progression</span>
+        <span id="presentStatusHint" class="status-hint">Acoustic resonance active · 10s progression</span>
       </div>
     </div>
+
+    <!-- Floating Restore Pill Button (Visible when dock is minimized) -->
+    <button id="dockRestoreBtn" class="dock-restore-btn" style="display: none;" title="Open Somatic Input">
+      <span class="pulse-dot"></span>
+      <span>INPUT</span>
+    </button>
   </div>
 
 

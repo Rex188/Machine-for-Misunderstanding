@@ -245,6 +245,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Floating Side Dock Minimize / Restore Handlers
+  const presentDock = document.getElementById('presentDock');
+  const dockMinimizeBtn = document.getElementById('dockMinimizeBtn');
+  const dockRestoreBtn = document.getElementById('dockRestoreBtn');
+
+  if (dockMinimizeBtn && presentDock && dockRestoreBtn) {
+    dockMinimizeBtn.addEventListener('click', () => {
+      presentDock.classList.add('minimized');
+      dockRestoreBtn.style.display = 'flex';
+    });
+
+    dockRestoreBtn.addEventListener('click', () => {
+      presentDock.classList.remove('minimized');
+      dockRestoreBtn.style.display = 'none';
+      if (presentTextInput) presentTextInput.focus();
+    });
+  }
+
   // ========================================================
   // 3. Unified Transmute Pipeline
   // ========================================================

@@ -33,6 +33,11 @@ let breathePhase = 0;
 const MAX_PARTICLES = 360;
 let bgParticles = [];
 
+// Acoustic Waterfall Strata (Alva Noto / Peter Saville Ridgeline Topography)
+const WATERFALL_SLICES = 8;
+const WATERFALL_POINTS = 160;
+let waterfallHistory = [];
+
 // ========================================================
 // Real-Time Web Audio Engine (Oscilloscope & Spectral Heatmap)
 // ========================================================
@@ -172,6 +177,12 @@ function initSketch() {
         });
       }
 
+      // Initialize Waterfall History
+      waterfallHistory = [];
+      for (let s = 0; s < WATERFALL_SLICES; s++) {
+        waterfallHistory.push(new Float32Array(WATERFALL_POINTS));
+      }
+
       p.background(248, 246, 240); // Warm Ivory / Raw Xuan Paper #f8f6f0
     };
 
@@ -245,25 +256,61 @@ function initSketch() {
       p.rect(0, 0, p.width, p.height);
 
       // ========================================================
-      // Layer 0: Subtle Ambient Thermal Wash (Seamless Ink Bleed, No Hard Circles)
+      // Layer 0: Spectral Ridgeline Topography (Alva Noto / Acoustic Strata Waterfall)
+      // Delicate wireframe contours cascading in depth — zero opaque box banding
       // ========================================================
       p.push();
       const hasLiveAudio = window.AUDIO_ENGINE.active;
-      const bassPow = hasLiveAudio ? window.AUDIO_ENGINE.bassEnergy : p.map(curAmp, 2, 10, 0.1, 0.6);
       const thermalRms = hasLiveAudio ? window.AUDIO_ENGINE.smoothedRms : p.map(curAmp, 2, 10, 0.05, 0.35);
 
-      // Atmospheric Vertical Thermal Ink Bleed rising softly from the lower horizon
-      const washAlpha = p.map(bassPow, 0, 1, 4, 18) + thermalRms * 12;
-      const washH = p.height * 0.42;
-      const washY = p.height - washH;
-      p.noStroke();
-      const washSteps = 6;
-      for (let s = 0; s < washSteps; s++) {
-        const segY = washY + (s / washSteps) * washH;
-        const segH = (washH / washSteps) + 4;
-        const segA = (s / washSteps) * washAlpha;
-        p.fill(primaryColor.levels[0], primaryColor.levels[1], primaryColor.levels[2], segA);
-        p.rect(0, segY, p.width, segH);
+      // Periodically sample FFT into historical waterfall buffer
+      if (p.frameCount % 2 === 0) {
+        const oldest = waterfallHistory.pop();
+        if (hasLiveAudio && window.AUDIO_ENGINE.freqData) {
+          const fData = window.AUDIO_ENGINE.freqData;
+          const maxBin = Math.min(fData.length, 360);
+          for (let i = 0; i < WATERFALL_POINTS; i++) {
+            // Perceptually scaled logarithmic frequency mapping
+            const binIdx = Math.floor(Math.pow(i / (WATERFALL_POINTS - 1), 1.6) * maxBin);
+            oldest[i] = fData[binIdx] / 255.0;
+          }
+        } else {
+          // Elegant mathematical acoustic standby carrier
+          for (let i = 0; i < WATERFALL_POINTS; i++) {
+            const u = i / (WATERFALL_POINTS - 1);
+            const w1 = Math.sin(u * 9.0 + p.frameCount * 0.03);
+            const w2 = Math.cos(u * 17.0 - p.frameCount * 0.02) * 0.4;
+            oldest[i] = Math.max(0, (w1 + w2) * 0.28 * (curAmp / 10.0));
+          }
+        }
+        waterfallHistory.unshift(oldest);
+      }
+
+      // Draw Strata Lines from back (oldest) to front (newest)
+      p.noFill();
+      const baseHorizonY = p.height * 0.86;
+      const strataSpacing = p.height * 0.014;
+      const strataWidth = p.width;
+
+      for (let s = WATERFALL_SLICES - 1; s >= 0; s--) {
+        const slice = waterfallHistory[s];
+        const depth = 1.0 - (s / WATERFALL_SLICES); // 1.0 = front, 0.1 = back
+        const lineY = baseHorizonY - s * strataSpacing;
+        const lineAlpha = (6 + depth * 28) * (hasLiveAudio ? (0.6 + thermalRms * 2.0) : 0.7);
+        const strokeW = 0.5 + depth * 0.4;
+
+        p.stroke(primaryColor.levels[0], primaryColor.levels[1], primaryColor.levels[2], lineAlpha);
+        p.strokeWeight(strokeW);
+        p.beginShape();
+        for (let i = 0; i < WATERFALL_POINTS; i++) {
+          const u = i / (WATERFALL_POINTS - 1);
+          const x = u * strataWidth;
+          const edgeWindow = p.sin(u * p.PI); // Smooth windowing at edges
+          const val = slice[i];
+          const ridgeHeight = val * (p.height * 0.08) * edgeWindow * depth;
+          p.curveVertex(x, lineY - ridgeHeight);
+        }
+        p.endShape();
       }
       p.pop();
 
@@ -326,8 +373,8 @@ function initSketch() {
       // Layer 2: Background Horizon Waveform (High Gain, Subtle Ink Presence)
       // ========================================================
       p.push();
-      // Lowered to the background horizon floor (y = 0.84) to cradle the central topology seamlessly
-      const horizonY = p.height * 0.84;
+      // Lowered to the background horizon floor (y = 0.86) to cradle the central topology seamlessly
+      const horizonY = p.height * 0.86;
       const scopeStartX = 0;
       const scopeWidth = p.width;
       const scopeHeight = p.height * 0.12;

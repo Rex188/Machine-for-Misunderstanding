@@ -1019,38 +1019,107 @@ textarea#bodyTextInput:focus {
   box-shadow: 0 0 12px rgba(59, 130, 246, 0.5);
 }
 
-/* Minimalist Floating Phenomenological Dock */
+/* Minimalist Floating Phenomenological Side Dock (Right-Margin Anchor) */
 .present-dock {
   position: absolute;
-  bottom: 32px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(720px, calc(100vw - 48px));
-  z-index: 10;
-  background: rgba(255, 255, 255, 0.78);
+  bottom: 28px;
+  right: 28px;
+  width: 380px;
+  max-width: calc(100vw - 56px);
+  z-index: 25;
+  background: rgba(255, 255, 255, 0.82);
   backdrop-filter: blur(28px) saturate(180%);
   -webkit-backdrop-filter: blur(28px) saturate(180%);
-  border: 1px solid rgba(224, 220, 210, 0.85);
-  border-radius: 24px;
-  padding: 16px 20px 14px 20px;
-  box-shadow: 0 24px 48px -12px rgba(60, 50, 35, 0.08),
-              0 0 0 1px rgba(255, 255, 255, 0.8) inset;
+  border: 1px solid rgba(220, 215, 205, 0.85);
+  border-radius: 20px;
+  padding: 14px 16px;
+  box-shadow: 0 20px 48px -12px rgba(60, 50, 35, 0.12),
+              0 0 0 1px rgba(255, 255, 255, 0.9) inset;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  gap: 10px;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+}
+
+.present-dock.minimized {
+  transform: translateY(calc(100% + 40px));
+  opacity: 0;
+  pointer-events: none;
+}
+
+.present-dock-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2px 2px 2px;
+}
+
+.dock-title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: #8c8577;
+}
+
+.dock-minimize-btn {
+  background: transparent;
+  border: none;
+  color: #8c8577;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 2px 8px;
+  border-radius: 6px;
+  line-height: 1;
+  transition: all 0.15s ease;
+}
+
+.dock-minimize-btn:hover {
+  background: rgba(0, 0, 0, 0.06);
+  color: #1a1c1e;
+}
+
+/* Floating Restore Pill Button (When Dock is Minimized) */
+.dock-restore-btn {
+  position: absolute;
+  bottom: 28px;
+  right: 28px;
+  z-index: 24;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(215, 210, 200, 0.85);
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #2b303a;
+  cursor: pointer;
+  box-shadow: 0 10px 24px -6px rgba(60, 50, 35, 0.1);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dock-restore-btn:hover {
+  background: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px -6px rgba(60, 50, 35, 0.15);
 }
 
 .present-dock:focus-within {
   background: rgba(255, 255, 255, 0.94);
   border-color: rgba(180, 165, 140, 0.9);
-  box-shadow: 0 28px 56px -12px rgba(60, 50, 35, 0.12),
+  box-shadow: 0 28px 56px -12px rgba(60, 50, 35, 0.14),
               0 0 0 1px rgba(255, 255, 255, 0.95) inset;
 }
 
 .present-presets {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
 }
 
