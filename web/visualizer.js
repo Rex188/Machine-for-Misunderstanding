@@ -370,23 +370,23 @@ function initSketch() {
       p.pop();
 
       // ========================================================
-      // Layer 2: Background Horizon Waveform (High Gain, Subtle Ink Presence)
+      // Layer 2: Central Equatorial Vector Scope (High Amplitude, Defined Ink)
       // ========================================================
       p.push();
-      // Lowered to the background horizon floor (y = 0.86) to cradle the central topology seamlessly
-      const horizonY = p.height * 0.86;
+      // Centered on the canvas (y = 0.5) as an equatorial acoustic datum
+      const horizonY = p.height * 0.5;
       const scopeStartX = 0;
       const scopeWidth = p.width;
-      const scopeHeight = p.height * 0.12;
+      const scopeHeight = p.height * 0.36;
 
       // Draw High-Gain Oscilloscope Traces with Smooth Hann-Window Edge Tapering
       const timeBuffer = (hasLiveAudio && window.AUDIO_ENGINE.timeData) ? window.AUDIO_ENGINE.timeData : null;
-      const sampleSteps = 280;
+      const sampleSteps = 320;
 
       // 1. Ghost Shimmer Trace (Soft Phosphor Bleed)
       p.noFill();
-      p.stroke(accentColor.levels[0], accentColor.levels[1], accentColor.levels[2], 35);
-      p.strokeWeight(0.6);
+      p.stroke(accentColor.levels[0], accentColor.levels[1], accentColor.levels[2], 50);
+      p.strokeWeight(0.8);
       p.beginShape();
       for (let s = 0; s <= sampleSteps; s++) {
         const u = s / sampleSteps;
@@ -398,19 +398,19 @@ function initSketch() {
           const idx = p.floor(u * (timeBuffer.length - 1));
           rawVal = (timeBuffer[idx] - 128) / 128.0;
         } else {
-          rawVal = p.sin(u * 16.0 + p.frameCount * 0.05) * 0.15;
+          rawVal = p.sin(u * 14.0 + p.frameCount * 0.05) * 0.2;
         }
 
-        // Responsive 5.5x gain with smooth hyperbolic tangent saturation
-        const boosted = Math.tanh(rawVal * 5.5);
-        const yOffset = boosted * (scopeHeight * 1.1) * edgeWindow;
+        // Responsive 7.5x gain with smooth hyperbolic tangent saturation
+        const boosted = Math.tanh(rawVal * 7.5);
+        const yOffset = boosted * scopeHeight * edgeWindow;
         p.curveVertex(x, horizonY + yOffset + 1.2);
       }
       p.endShape();
 
-      // 2. Primary Hairline Vector Waveform
-      p.stroke(primaryColor.levels[0], primaryColor.levels[1], primaryColor.levels[2], 95);
-      p.strokeWeight(0.9);
+      // 2. Primary Hairline Vector Waveform (Clear, Defined Presence)
+      p.stroke(primaryColor.levels[0], primaryColor.levels[1], primaryColor.levels[2], 150);
+      p.strokeWeight(1.1);
       p.beginShape();
       for (let s = 0; s <= sampleSteps; s++) {
         const u = s / sampleSteps;
@@ -422,11 +422,11 @@ function initSketch() {
           const idx = p.floor(u * (timeBuffer.length - 1));
           rawVal = (timeBuffer[idx] - 128) / 128.0;
         } else {
-          rawVal = p.sin(u * 16.0 + p.frameCount * 0.05) * 0.15;
+          rawVal = p.sin(u * 14.0 + p.frameCount * 0.05) * 0.2;
         }
 
-        const boosted = Math.tanh(rawVal * 5.5);
-        const yOffset = boosted * (scopeHeight * 1.1) * edgeWindow;
+        const boosted = Math.tanh(rawVal * 7.5);
+        const yOffset = boosted * scopeHeight * edgeWindow;
         p.curveVertex(x, horizonY + yOffset);
       }
       p.endShape();
