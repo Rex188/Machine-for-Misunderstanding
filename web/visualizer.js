@@ -38,6 +38,10 @@ const WATERFALL_SLICES = 8;
 const WATERFALL_POINTS = 160;
 let waterfallHistory = [];
 
+// Stabilized Oscilloscope Buffer (Zero-Crossing Trigger + Gaussian Filter + Inertia)
+const SCOPE_STEPS = 140;
+let scopeSmoothed = new Float32Array(SCOPE_STEPS + 1);
+
 // ========================================================
 // Real-Time Web Audio Engine (Oscilloscope & Spectral Heatmap)
 // ========================================================
@@ -177,11 +181,12 @@ function initSketch() {
         });
       }
 
-      // Initialize Waterfall History
+      // Initialize Waterfall & Scope Buffers
       waterfallHistory = [];
       for (let s = 0; s < WATERFALL_SLICES; s++) {
         waterfallHistory.push(new Float32Array(WATERFALL_POINTS));
       }
+      scopeSmoothed = new Float32Array(SCOPE_STEPS + 1);
 
       p.background(248, 246, 240); // Warm Ivory / Raw Xuan Paper #f8f6f0
     };
@@ -370,7 +375,8 @@ function initSketch() {
       p.pop();
 
       // ========================================================
-      // Layer 2: Central Equatorial Vector Scope (High Amplitude, Defined Ink)
+      // Layer 2: Central Equatorial Vector Scope (Stabilized Harmonic Ribbon)
+      // Features: Zero-Crossing Phase Trigger + Gaussian De-Spike + Spring Inertia
       // ========================================================
       p.push();
       // Centered on the canvas (y = 0.5) as an equatorial acoustic datum
@@ -379,54 +385,77 @@ function initSketch() {
       const scopeWidth = p.width;
       const scopeHeight = p.height * 0.36;
 
-      // Draw High-Gain Oscilloscope Traces with Smooth Hann-Window Edge Tapering
       const timeBuffer = (hasLiveAudio && window.AUDIO_ENGINE.timeData) ? window.AUDIO_ENGINE.timeData : null;
-      const sampleSteps = 320;
 
-      // 1. Ghost Shimmer Trace (Soft Phosphor Bleed)
+      // 1. Zero-Crossing Phase Lock: Pin the wave's phase so it doesn't vibrate erratically
+      let triggerOffset = 0;
+      if (timeBuffer) {
+        const searchLimit = Math.min(240, timeBuffer.length - SCOPE_STEPS * 3);
+        for (let i = 1; i < searchLimit; i++) {
+          if (timeBuffer[i - 1] < 128 && timeBuffer[i] >= 128) {
+            triggerOffset = i;
+            break;
+          }
+        }
+      }
+
+      // 2. Sample, De-spike, & Smooth with Physical Spring Inertia
+      const windowStride = 2.2; // Focus on musical fundamental waves
+      for (let s = 0; s <= SCOPE_STEPS; s++) {
+        let rawTarget = 0;
+        if (timeBuffer) {
+          const centerIdx = triggerOffset + Math.floor(s * windowStride);
+          const i0 = Math.max(0, centerIdx - 2);
+          const i1 = Math.max(0, centerIdx - 1);
+          const i2 = Math.min(timeBuffer.length - 1, centerIdx);
+          const i3 = Math.min(timeBuffer.length - 1, centerIdx + 1);
+          const i4 = Math.min(timeBuffer.length - 1, centerIdx + 2);
+
+          // 5-point Gaussian low-pass to eliminate master noise & hi-hat transients
+          const filtered = (
+            (timeBuffer[i0] - 128) * 0.08 +
+            (timeBuffer[i1] - 128) * 0.22 +
+            (timeBuffer[i2] - 128) * 0.40 +
+            (timeBuffer[i3] - 128) * 0.22 +
+            (timeBuffer[i4] - 128) * 0.08
+          ) / 128.0;
+
+          rawTarget = filtered;
+        } else {
+          const u = s / SCOPE_STEPS;
+          rawTarget = Math.sin(u * 12.0 + p.frameCount * 0.04) * 0.20 +
+                      Math.cos(u * 22.0 - p.frameCount * 0.02) * 0.06;
+        }
+
+        // Punchy 7.5x gain with smooth hyperbolic tangent saturation
+        const boosted = Math.tanh(rawTarget * 7.5);
+        // Physical spring damping (0.35 lerp gives fluid silk tension)
+        scopeSmoothed[s] = p.lerp(scopeSmoothed[s], boosted, 0.35);
+      }
+
+      // 3. Render Ghost Shimmer Trace (Ethereal Phosphor Decay)
       p.noFill();
       p.stroke(accentColor.levels[0], accentColor.levels[1], accentColor.levels[2], 50);
       p.strokeWeight(0.8);
       p.beginShape();
-      for (let s = 0; s <= sampleSteps; s++) {
-        const u = s / sampleSteps;
+      for (let s = 0; s <= SCOPE_STEPS; s++) {
+        const u = s / SCOPE_STEPS;
         const x = scopeStartX + u * scopeWidth;
-        const edgeWindow = p.sin(u * p.PI); // Smooth 0 -> 1 -> 0 taper so waveform emerges gently from borders
-
-        let rawVal = 0;
-        if (timeBuffer) {
-          const idx = p.floor(u * (timeBuffer.length - 1));
-          rawVal = (timeBuffer[idx] - 128) / 128.0;
-        } else {
-          rawVal = p.sin(u * 14.0 + p.frameCount * 0.05) * 0.2;
-        }
-
-        // Responsive 7.5x gain with smooth hyperbolic tangent saturation
-        const boosted = Math.tanh(rawVal * 7.5);
-        const yOffset = boosted * scopeHeight * edgeWindow;
+        const edgeWindow = p.sin(u * p.PI); // Windowing at left/right edges
+        const yOffset = scopeSmoothed[s] * scopeHeight * edgeWindow;
         p.curveVertex(x, horizonY + yOffset + 1.2);
       }
       p.endShape();
 
-      // 2. Primary Hairline Vector Waveform (Clear, Defined Presence)
+      // 4. Render Primary Hairline Vector Waveform (Harmonic Ink Ribbon)
       p.stroke(primaryColor.levels[0], primaryColor.levels[1], primaryColor.levels[2], 150);
       p.strokeWeight(1.1);
       p.beginShape();
-      for (let s = 0; s <= sampleSteps; s++) {
-        const u = s / sampleSteps;
+      for (let s = 0; s <= SCOPE_STEPS; s++) {
+        const u = s / SCOPE_STEPS;
         const x = scopeStartX + u * scopeWidth;
         const edgeWindow = p.sin(u * p.PI);
-
-        let rawVal = 0;
-        if (timeBuffer) {
-          const idx = p.floor(u * (timeBuffer.length - 1));
-          rawVal = (timeBuffer[idx] - 128) / 128.0;
-        } else {
-          rawVal = p.sin(u * 14.0 + p.frameCount * 0.05) * 0.2;
-        }
-
-        const boosted = Math.tanh(rawVal * 7.5);
-        const yOffset = boosted * scopeHeight * edgeWindow;
+        const yOffset = scopeSmoothed[s] * scopeHeight * edgeWindow;
         p.curveVertex(x, horizonY + yOffset);
       }
       p.endShape();
