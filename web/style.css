@@ -1019,6 +1019,40 @@ textarea#bodyTextInput:focus {
   box-shadow: 0 0 12px rgba(59, 130, 246, 0.5);
 }
 
+/* Minimalist Fullscreen Toggle Button */
+.fullscreen-btn {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(215, 210, 200, 0.75);
+  border-radius: 999px;
+  padding: 5px 14px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #3e4450;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fullscreen-btn:hover {
+  background: #ffffff;
+  color: #111418;
+  border-color: #928b7d;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+}
+
+.fullscreen-btn .fs-icon {
+  stroke: currentColor;
+}
+
 /* Minimalist Floating Phenomenological Side Dock (Right-Margin Anchor) */
 .present-dock {
   position: absolute;

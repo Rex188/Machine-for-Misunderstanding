@@ -264,6 +264,61 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ========================================================
+  // Fullscreen Management (Button + 'F' Keybind)
+  // ========================================================
+  const fsBtn = document.getElementById('fullscreenToggleBtn');
+
+  function toggleFullscreen() {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      const docEl = document.documentElement;
+      if (docEl.requestFullscreen) {
+        docEl.requestFullscreen().catch(err => console.warn('Fullscreen request:', err));
+      } else if (docEl.webkitRequestFullscreen) {
+        docEl.webkitRequestFullscreen();
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen().catch(err => console.warn('Exit fullscreen:', err));
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      }
+    }
+  }
+
+  function updateFullscreenUI() {
+    const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+    document.body.classList.toggle('is-fullscreen', isFs);
+    if (fsBtn) {
+      const enterIcon = fsBtn.querySelector('.fs-icon.enter');
+      const exitIcon = fsBtn.querySelector('.fs-icon.exit');
+      const label = fsBtn.querySelector('.fs-text');
+      if (enterIcon) enterIcon.style.display = isFs ? 'none' : 'block';
+      if (exitIcon) exitIcon.style.display = isFs ? 'block' : 'none';
+      if (label) label.textContent = isFs ? 'EXIT' : 'FULLSCREEN';
+    }
+    // Trigger resize on p5.js canvas
+    setTimeout(() => {
+      window.dispatchEvent(new Event('resize'));
+    }, 120);
+  }
+
+  if (fsBtn) {
+    fsBtn.addEventListener('click', toggleFullscreen);
+  }
+
+  document.addEventListener('fullscreenchange', updateFullscreenUI);
+  document.addEventListener('webkitfullscreenchange', updateFullscreenUI);
+
+  // Keyboard shortcut: 'F' toggles fullscreen when not typing in input/textarea
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'f' || e.key === 'F') {
+      const activeTag = document.activeElement ? document.activeElement.tagName : '';
+      if (activeTag === 'TEXTAREA' || activeTag === 'INPUT') return;
+      toggleFullscreen();
+    }
+  });
+
+  // ========================================================
   // 3. Unified Transmute Pipeline
   // ========================================================
   async function executeInterpretation() {
