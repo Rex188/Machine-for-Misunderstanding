@@ -50,10 +50,10 @@ The code for this is in `blind_test/metrics.py`. Every round is stored in SQLite
 
 From the report (10 sessions, 31 rounds in total; the tables use 5 representative sessions, 21 rounds):
 
-- **The sound lost more meaning than the model did.** Mean `d_model` was 0.1980 and mean `d_medium` was 0.2984. The report states `d_medium > d_model` in 80% of sessions.
+- **The sound lost more meaning than the model did.** Mean `d_model` was 0.1980 and mean `d_medium` was 0.2984. In the data notes, `d_medium > d_model` in 7 of 10 sessions.
 - **Kind messages could sound threatening.** In one 6-round session, the sender wrote *"Your dream will come true."* The receiver heard something "a little scary and uncertain". Later in the same session the receiver wrote: *"He def wanna comfort me because the audio sounds deadass creepy."* ([CASE_STUDIES.md](CASE_STUDIES.md))
 - **People can learn to steer the sound.** In Session 3, the sender switched from describing a mood ("I am expecting some coffee") to giving the sound direct instructions ("Add more beat and make it cheerful"). `d_total` dropped from 0.563 in round 0 to 0.165 in round 3.
-- **A bigger model did not fix it.** In a 4-round comparison, the DeepSeek API had a lower model gap than my local LoRA model (0.1587 vs 0.2162) and was faster (858 ms vs 4403 ms), but the medium gap was still 0.2161.
+- **A bigger model did not fix it.** Comparing Session 4 (DeepSeek API, `deepseek-chat`) with Session 3 (my local LoRA model), both 4 rounds, DeepSeek had a lower model gap (0.1587 vs 0.2162) and was faster (858 ms vs 4403 ms), but the medium gap was still 0.2161.
 
 This is a small sample, so I read these as observations, not general proof. VAD also flattens feelings into three numbers. `LAB_REPORT.md` section 3.1 discusses this limit.
 
