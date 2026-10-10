@@ -26,3 +26,6 @@ __pycache__/
 *.pyc
 .DS_Store
 *.log
+
+# 5. Local API keys (read by blind_test/real_model.py and launch_performance.sh)
+*.key

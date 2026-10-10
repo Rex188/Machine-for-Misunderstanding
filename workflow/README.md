@@ -1,6 +1,6 @@
 # Project 2 Workflow — A Machine for Misunderstanding
 
-> **[English](portfolio/project2/workflow/README.md)** | [简体中文](portfolio/project2/workflow/README.zh-CN.md)
+> **[English](README.md)** | [简体中文](README.zh-CN.md)
 
 **What it is**: A's phenomenological body text → a black-box interpretation model → VAD vector → OSC → VCV sound.
 This directory is the MVP implementation layer of Project 2, **self-contained**. Run results: [run-log.md](run-log.md).

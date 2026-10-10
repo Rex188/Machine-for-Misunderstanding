@@ -140,7 +140,7 @@ To determine whether larger parameter capacity and external reasoning scale can 
 To understand how mathematical deviations translate into visceral human experiences, we documented detailed dialogue logs, participant feedback, and psychoacoustic inversions across two formal sessions. 
 
 For the complete, uncompressed round-by-round dialogue records, qualitative feedback, and acoustic analysis:  
-👉 **[View Detailed Phenomenological Case Studies & Dialogue Logs →](file:///Users/rexli/Documents/Rex/portfolio/project2/CASE_STUDIES.md)**
+👉 **[View Detailed Phenomenological Case Studies & Dialogue Logs →](CASE_STUDIES.md)**
 
 *Key highlights from the separate dossier:*
 - **The "Creepy Comfort" Paradox (Evolution Test)**: Demonstrates how comforting inputs like *"You need to be confident!"* were transduced by high-arousal FM synthesis into jarring metallic overtones, causing the receiver to report that the sound felt *"deadass creepy"* ($d_{\text{total}} = 0.579$).
