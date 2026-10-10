@@ -3,7 +3,7 @@
 
 **Author**: Rex Li  
 **Project**: Portfolio Project 2 (`portfolio/project2/`)  
-**Data**: 10 Sessions / 31 Communication Cycles (`portfolio/project2/blind_test/data/`)  
+**Data**: 10 Sessions / 36 Communication Cycles (`portfolio/project2/blind_test/data/`)  
 
 ---
 
@@ -11,7 +11,7 @@
 
 Modern social media and fast fashion culture have led to an unprecedented failure of text. As human communication is mediated through algorithmic feeds, automated curation, and fast-paced platforms, original subjective meanings are consistently distorted. In this project, we treat generative ambient music as an analog for digital media itself. We built **A Machine for Misunderstanding**, an experimental human-computer-human system that forces two participants to converse solely through generative synthesis driven by language models.
 
-Across 10 sessions and 31 complete interaction cycles, we measured the divergence between what people meant and what was perceived. Our data demonstrates that the acoustic medium introduces substantially greater distortion than the language model itself ($d_{\text{medium}} > d_{\text{model}}$ in 80% of sessions), and that positive intentions are often distorted by the medium into disturbing acoustic experiences. This experiment visualizes how modern media fundamentally destabilizes human expression, turning communication into an ongoing struggle against mediation.
+Across 10 sessions and 36 complete interaction cycles, we measured the divergence between what people meant and what was perceived. Our data demonstrates that the acoustic medium introduces substantially greater distortion than the language model itself ($d_{\text{medium}} > d_{\text{model}}$ in 7 of 10 sessions), and that positive intentions are often distorted by the medium into disturbing acoustic experiences. This experiment visualizes how modern media fundamentally destabilizes human expression, turning communication into an ongoing struggle against mediation.
 
 ---
 
@@ -90,18 +90,18 @@ This gives us three direct, straightforward metrics:
 
 ## 4. Generative Sound Mapping (8-Channel Control Voltages)
 
-The language model's inferred parameters $\{V, A, D, C\}$ are mapped into 8 control voltages ($0.0\,\text{V} - 10.0\,\text{V}$) to control the modular synthesizer (Plaits, Plateau Reverb, and Clocked):
+The language model's inferred parameters $\{V, A, D\}$ are mapped into 8 control voltages ($-4.0\,\text{V}$ to $+10.0\,\text{V}$) to control the modular synthesizer (Plaits, Plateau Reverb, and Clocked):
 
 | Ch | Parameter | Function | Target Module | Mapping Formula |
 |:---|:---|:---|:---|:---|
-| 1 | `/vcv/timbre` | Harmonic brightness | Timbre CV (Plaits) | $v_1 = 10 \cdot [0.7A + 0.3(1 - V)]$ |
-| 2 | `/vcv/frequency`| Pitch center | V/Oct modulation | $v_2 = 10 \cdot [0.5 + 0.4(A - 0.5) + 0.1(D - 0.5)]$ |
-| 3 | `/vcv/amplitude`| Volume / Dynamic level | VCA Level | $v_3 = 10 \cdot [0.2 + 0.8A]$ |
-| 4 | `/vcv/envelope` | Decay speed | ADSR decay time | $v_4 = 10 \cdot [1.0 - 0.8A]$ |
-| 5 | `/vcv/mode` | Synthesis engine | Engine select (Plaits) | $v_5 = 10 \cdot V$ |
-| 6 | `/vcv/chord` | Chord harmony / Color | Chord morphing | $v_6 = 10 \cdot [0.5 + 0.5(V - 0.5)]$ |
-| 7 | `/vcv/type` | Space & Diffusion | Reverb decay time | $v_7 = 10 \cdot [0.8(1 - D) + 0.2A]$ |
-| 8 | `/vcv/noise` | Noise & Instability | Noise modulation | $v_8 = 10 \cdot [0.7(1 - C) + 0.3A]$ |
+| 1 | `/param/timbre` | Harmonic brightness | Timbre CV (Plaits) | $v_1 = -3 + 8V$ |
+| 2 | `/param/frequency`| Pitch center | V/Oct modulation | $v_2 = -2 + 4A$ |
+| 3 | `/param/amplitude`| Volume / Dynamic level | VCA Level | $v_3 = 2 + 8A$ |
+| 4 | `/param/envelope` | Decay speed | ADSR decay time | $v_4 = -4 + 8(1 - A)$ |
+| 5 | `/param/mode` | Scale mode | Mode select (ScaleCV) | $v_5 = -4 + 8V$ |
+| 6 | `/param/chord` | Chord degree (0–6) | Chord select (DiatonicCV) | $v_6 = \operatorname{round}(6D)$ |
+| 7 | `/param/type` | Chord type (triad / 7th / 9th) | Type select (DiatonicCV) | $v_7 = \operatorname{round}(2D)$ |
+| 8 | `/param/noise` | Noise & Instability | Noise modulation | $v_8 = 10(1 - D)$ |
 
 ---
 
@@ -119,19 +119,19 @@ This dataset highlights human interaction across distinct conversational context
 | **Session 1** | First Meeting & Uncertainty | 4 | 0.1931 | 0.2653 | **0.3575** | Ambiguous social posturing amplified into atmospheric drift |
 | **Session 2** | Post-lunch Drowsiness to Movement | 4 | 0.2015 | 0.1790 | **0.2486** | Somatic fatigue successfully transitioned into kinetic rhythm |
 | **Pilot 1** | Solitude by the Sea & High Energy | 3 | 0.1919 | 0.3603 | **0.4139** | Solitary reflection sharply split across dynamic synth registers |
-| **Group Average** | *Pooled Representative Trials* | **21** | **0.1980** | **0.2984** | **0.3704** | **Medium distortion exceeds model gap by 50.7%** |
+| **Group Average** | *Mean of session means* | **21** | **0.1980** | **0.2984** | **0.3704** | **Medium distortion exceeds model gap by 50.7%** |
 
 ### 5.2 Table 2: Model Architecture Ablation & Latency Comparison
-To determine whether larger parameter capacity and external reasoning scale can eliminate the communicative gap, we conducted an ablation comparing our local fine-tuned edge model against the frontier **DeepSeek-V4 API** under an identical 4-round conversational setting.
+To determine whether larger parameter capacity and external reasoning scale can eliminate the communicative gap, we conducted an ablation comparing our local fine-tuned edge model (Session 3) against the frontier **DeepSeek API** (`deepseek-chat`, Session 4). Both were 4-round sessions, but with different conversation texts, so this is a cross-session comparison rather than an identical setting.
 
 | Architecture / Model Backend | Deployment Mode | Avg Latency | Model Gap ($d_{\text{model}}$) | Medium Gap ($d_{\text{medium}}$) | Total Misunderstanding ($d_{\text{total}}$) |
 |:---|:---|:---:|:---:|:---:|:---:|
-| **Local Qwen2.5-1.5B LoRA** | On-device MPS (Apple Silicon) | 4403.0 ms | 0.2162 | 0.3111 | **0.3805** |
-| **DeepSeek-V4 API** | Cloud Distributed Inference | **858.0 ms** | **0.1587** | **0.2161** | **0.2697** |
+| **Local Qwen2.5-1.5B LoRA (Session 3)** | On-device MPS (Apple Silicon) | 4403.0 ms | 0.2162 | 0.3111 | **0.3805** |
+| **DeepSeek API, `deepseek-chat` (Session 4)** | Cloud Distributed Inference | **858.0 ms** | **0.1587** | **0.2161** | **0.2697** |
 
 #### Key Analytical Takeaways:
-1. **The Acoustic Medium Dominates Distortion**: In all representative sessions, the acoustic medium introduced substantially more entropy than the model's text decoding ($\mu(d_{\text{medium}}) = 0.2984$ vs. $\mu(d_{\text{model}}) = 0.1980$). The musical medium itself acts as an autonomous filter that fundamentally destabilizes semantic clarity.
-2. **Frontier Models Improve Text Precision, but Cannot Bypass the Medium**: While DeepSeek-V4 reduced textual extraction error by $26.6\%$ ($0.2162 \to 0.1587$) and provided near-instantaneous response times, the acoustic medium distortion remained prominent ($0.2161$). Scaling up linguistic intelligence cannot resolve the perceptual ambiguity inherent to sensory media.
+1. **The Acoustic Medium Dominates Distortion**: In 4 of the 5 sessions in Table 1, the acoustic medium introduced substantially more entropy than the model's text decoding ($\mu(d_{\text{medium}}) = 0.2984$ vs. $\mu(d_{\text{model}}) = 0.1980$). The musical medium itself acts as an autonomous filter that fundamentally destabilizes semantic clarity.
+2. **Frontier Models Improve Text Precision, but Cannot Bypass the Medium**: While DeepSeek (`deepseek-chat`, Session 4) reduced textual extraction error, relative to the local model in Session 3, by $26.6\%$ ($0.2162 \to 0.1587$) and provided near-instantaneous response times, the acoustic medium distortion remained prominent ($0.2161$). Scaling up linguistic intelligence cannot resolve the perceptual ambiguity inherent to sensory media.
 
 ---
 
@@ -143,14 +143,14 @@ For the complete, uncompressed round-by-round dialogue records, qualitative feed
 👉 **[View Detailed Phenomenological Case Studies & Dialogue Logs →](CASE_STUDIES.md)**
 
 *Key highlights from the separate dossier:*
-- **The "Creepy Comfort" Paradox (Evolution Test)**: Demonstrates how comforting inputs like *"You need to be confident!"* were transduced by high-arousal FM synthesis into jarring metallic overtones, causing the receiver to report that the sound felt *"deadass creepy"* ($d_{\text{total}} = 0.579$).
+- **The "Creepy Comfort" Paradox (Evolution Test)**: Demonstrates how comforting inputs like *"You need to be confident!"* were transduced by high-arousal FM synthesis into jarring metallic overtones, causing the receiver to report that the sound felt *"deadass creepy"* (Round 5, $d_{\text{total}} = 0.427$).
 - **Struggling for Mutual Grounding (Session 3)**: Documents a four-round negotiation where participants calibrated their expressions from abstract feelings to direct acoustic cues, progressively bringing the misunderstanding score down from $0.563$ to $0.165$.
 
 ---
 
 ## 7. Conclusion
 
-The primary empirical finding of *A Machine for Misunderstanding* is that when human expression is forced through an automated intermediary, the medium itself introduces substantially more variance than the words themselves ($d_{\text{medium}} > d_{\text{model}}$ across 80% of trials). Natural language models are increasingly capable of approximating semantic intent; however, once those semantic representations are re-embodied into physical, continuous media—whether analog synthesizer voltages or algorithmic social media feeds—the structural properties of the medium dominate the interpretation. The medium does not merely transmit meaning; it possesses its own acoustic and affective agency that reshapes and alienates original intentions.
+The primary empirical finding of *A Machine for Misunderstanding* is that when human expression is forced through an automated intermediary, the medium itself introduces substantially more variance than the words themselves ($d_{\text{medium}} > d_{\text{model}}$ in 7 of 10 sessions). Natural language models are increasingly capable of approximating semantic intent; however, once those semantic representations are re-embodied into physical, continuous media—whether analog synthesizer voltages or algorithmic social media feeds—the structural properties of the medium dominate the interpretation. The medium does not merely transmit meaning; it possesses its own acoustic and affective agency that reshapes and alienates original intentions.
 
 In contemporary digital culture, where authentic interpersonal connection is increasingly replaced by algorithmic feeds and flattened digital text, understanding this communicative gap is urgent. By quantifying how meaning shears and drifts across generative mediation, this study demonstrates that seamless digital communication is an illusion. Recognizing the inevitable distortion introduced by media is the first step toward reclaiming mindful, critical engagement with the computational systems that structure modern human interaction.
 
