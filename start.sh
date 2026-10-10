@@ -1,1 +1,3 @@
-/Users/rexli/Documents/Rex/portfolio/project2/workflow/start.sh
+#!/usr/bin/env bash
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+exec "$SCRIPT_DIR/workflow/start.sh" "$@"
