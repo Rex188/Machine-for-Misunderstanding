@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Machine for Misunderstanding — Lab Research Report</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+  <!-- Google Fonts: Serif & Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-paper: #fbfaf7;
+      --bg-card: #ffffff;
+      --text-main: #1c1b18;
+      --text-muted: #646059;
+      --accent: #92400e;
+      --border-color: #e6e2d8;
+    }
+    body {
+      background-color: var(--bg-paper);
+      color: var(--text-main);
+      font-family: 'Newsreader', Georgia, serif;
+      font-size: 1.125rem;
+      line-height: 1.78;
+      -webkit-font-smoothing: antialiased;
+    }
+    .font-sans-ui {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .font-mono-code {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .paper-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03), 0 4px 12px rgba(0,0,0,0.015);
+    }
+    .table-academic th {
+      border-bottom: 1.5px solid #1c1b18;
+      padding: 0.65rem 0.85rem;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.82rem;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: #333;
+    }
+    .table-academic td {
+      border-bottom: 1px solid #ebe7df;
+      padding: 0.65rem 0.85rem;
+      font-size: 0.95rem;
+    }
+    .table-academic tr:last-child td {
+      border-bottom: 1.5px solid #1c1b18;
+    }
+    .katex {
+      font-size: 1.05em;
+    }
+    /* Tab buttons */
+    .tab-btn.active {
+      border-color: #92400e;
+      color: #92400e;
+      background-color: #fef3c7;
+    }
+  </style>
+</head>
+
+<body class="py-12 px-4 md:px-8">
+  <div class="max-w-4xl mx-auto">
+
+
+
+    <!-- Paper Header -->
+    <header class="mb-12">
+      <h1 class="text-3xl md:text-5xl font-semibold leading-tight text-stone-950 mb-3 tracking-tight">
+        A Machine for Misunderstanding
+      </h1>
+      <p class="text-lg md:text-2xl text-stone-700 font-normal leading-snug mb-3">
+        Exploring the Distortion of Language Through Generative Musical Media
+      </p>
+      <p class="text-sm md:text-base italic text-stone-500 mb-6">
+        Laboratory Research Report & Empirical Analysis
+      </p>
+
+      <div class="font-sans-ui flex flex-wrap items-center gap-y-2 gap-x-6 text-sm text-stone-700 py-3 border-y border-stone-200">
+        <div><strong class="text-stone-900">Author:</strong> Rex Li</div>
+        <div><strong class="text-stone-900">Affiliation:</strong> Nanjing Foreign Language School</div>
+        <div><strong class="text-stone-900">Scope:</strong> 10 Sessions / 31 Communication Cycles</div>
+        <div><strong class="text-stone-900">Date:</strong> October 2026</div>
+      </div>
+
+      <!-- Quick Metrics Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 my-8 font-sans-ui">
+        <div class="paper-card p-4 rounded-lg text-center">
+          <div class="text-xs text-stone-500 uppercase tracking-wider mb-1 font-semibold">Total Cycles</div>
+          <div class="text-2xl font-bold text-stone-900">31</div>
+          <div class="text-xs text-stone-500">10 double-blind sessions</div>
+        </div>
+        <div class="paper-card p-4 rounded-lg text-center">
+          <div class="text-xs text-stone-500 uppercase tracking-wider mb-1 font-semibold">Medium Dominance</div>
+          <div class="text-2xl font-bold text-amber-800">80%</div>
+          <div class="text-xs text-stone-500 font-mono-code text-[11px]">$d_{\text{medium}} > d_{\text{model}}$</div>
+        </div>
+        <div class="paper-card p-4 rounded-lg text-center">
+          <div class="text-xs text-stone-500 uppercase tracking-wider mb-1 font-semibold">Mean Distortion</div>
+          <div class="text-2xl font-bold text-stone-900">+50.7%</div>
+          <div class="text-xs text-stone-500">Acoustic vs. Model gap</div>
+        </div>
+        <div class="paper-card p-4 rounded-lg text-center">
+          <div class="text-xs text-stone-500 uppercase tracking-wider mb-1 font-semibold">Inference Latency</div>
+          <div class="text-2xl font-bold text-stone-900">858 ms</div>
+          <div class="text-xs text-stone-500">DeepSeek-V4 cloud API</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Abstract -->
+    <section class="paper-card p-6 md:p-8 rounded-xl mb-12 bg-amber-50/40 border border-amber-900/15">
+      <h2 class="font-sans-ui text-xs font-bold uppercase tracking-wider text-amber-900 mb-2">Abstract</h2>
+      <p class="text-stone-800 leading-relaxed text-[1.05rem]">
+        Modern social media and algorithmic feeds have led to an unprecedented failure of text. As human communication is mediated through automated curation, short-video clips, and algorithmic feeds, original subjective intentions are systematically distorted. In this project, we treat generative ambient music as an analog for digital media itself. We built <strong>A Machine for Misunderstanding</strong>, an experimental human-computer-human installation forcing two participants in isolated rooms to converse solely through generative synthesis driven by language models.
+      </p>
+      <p class="text-stone-800 leading-relaxed text-[1.05rem] mt-3">
+        Across 10 sessions and 31 complete interaction cycles, our double-blind data proves that the acoustic medium introduces substantially greater distortion than the language model itself ($d_{\text{medium}} > d_{\text{model}}$ in 80% of sessions), and that positive affective intentions are routinely inverted into alarming acoustic experiences. This experiment renders visceral how computational media fundamentally destabilizes human expression.
+      </p>
+    </section>
+
+    <!-- Section 1 -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold text-stone-950 border-b border-stone-200 pb-2 mb-4">1. Introduction: Media and the Breakdown of Language</h2>
+      <h3 class="text-xl font-medium text-stone-800 mb-2">1.1 The Medium is the Message in the Algorithmic Age</h3>
+      <p class="mb-4">
+        Marshall McLuhan famously formulated that <em>"the medium is the message"</em>: the infrastructure through which we communicate is never a neutral container; it actively reshapes, filters, and defines the content it carries. In contemporary social media, human expression is passed through opaque recommender networks and viral compression. Words lose their visceral context. We believe we are speaking to another human, but we are actually speaking into a computational medium that reformulates our intentions, creating widespread social alienation, affective polarization, and chronic misunderstanding.
+      </p>
+
+      <h3 class="text-xl font-medium text-stone-800 mb-2">1.2 Music as an Extreme Form of Mediation</h3>
+      <p class="mb-4">
+        Instead of designing an AI tool to "optimize" or "clarify" communication, we built a system to expose this rupture. A sender inputs their real-time emotional and bodily state in natural text. An AI model interprets these words into 4-dimensional psychological coordinates $\{V, A, D, C\}$, which directly modulate an analog-style modular synthesizer (VCV Rack). A blind receiver hears the resulting continuous generative soundscape and attempts to reconstruct what the sender originally felt. By treating ambient sound as media infrastructure, the experiment dramatizes how mediation inevitably shears human connection.
+      </p>
+    </section>
+
+    <!-- Section 2: Interactive System Workflow -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold text-stone-950 border-b border-stone-200 pb-2 mb-4">2. Experimental System & Interactive Workflow</h2>
+      <p class="mb-6">
+        The system functions as a double-blind miniature model of social media: participant A broadcasts, an automated intermediary translates it, and participant B in an isolated acoustic chamber attempts to reconstruct the emotional state solely through headphone audio.
+      </p>
+
+      <!-- Interactive Workflow Diagram -->
+      <div class="paper-card p-6 rounded-xl mb-6">
+        <div class="font-sans-ui text-xs font-semibold text-stone-500 uppercase tracking-wider mb-4">
+          Interactive Signal Pipeline (Click any node to inspect parameters)
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-3 font-sans-ui text-sm mb-4">
+          <div onclick="showPipeline('sender')" id="node-sender" class="cursor-pointer border-2 border-stone-800 bg-stone-50 p-4 rounded-lg transition hover:shadow-md">
+            <div class="font-bold text-stone-900">① Sender (User A)</div>
+            <div class="text-xs text-stone-600 mt-1">Raw Text Prompt</div>
+            <div class="text-xs text-stone-500 font-mono-code mt-2">Self-assessed VAD</div>
+          </div>
+          <div onclick="showPipeline('llm')" id="node-llm" class="cursor-pointer border border-stone-300 bg-white p-4 rounded-lg transition hover:shadow-md">
+            <div class="font-bold text-stone-900">② Language Model</div>
+            <div class="text-xs text-stone-600 mt-1">LoRA / DeepSeek-V4</div>
+            <div class="text-xs text-stone-500 font-mono-code mt-2">Outputs {V, A, D, C}</div>
+          </div>
+          <div onclick="showPipeline('vcv')" id="node-vcv" class="cursor-pointer border border-stone-300 bg-white p-4 rounded-lg transition hover:shadow-md">
+            <div class="font-bold text-stone-900">③ VCV Rack Modular</div>
+            <div class="text-xs text-stone-600 mt-1">8-Ch Control Voltages</div>
+            <div class="text-xs text-stone-500 font-mono-code mt-2">0.0V – 10.0V DC</div>
+          </div>
+          <div onclick="showPipeline('receiver')" id="node-receiver" class="cursor-pointer border border-stone-300 bg-white p-4 rounded-lg transition hover:shadow-md">
+            <div class="font-bold text-stone-900">④ Receiver (User B)</div>
+            <div class="text-xs text-stone-600 mt-1">Acoustic Audition</div>
+            <div class="text-xs text-stone-500 font-mono-code mt-2">Perceived VAD Log</div>
+          </div>
+        </div>
+
+        <div id="pipeline-detail" class="font-sans-ui bg-stone-50 border border-stone-200 rounded-lg p-4 text-xs text-stone-700 leading-normal">
+          <strong class="text-stone-900 text-sm">Interactive Inspector:</strong> Click on any node above to inspect its real-time mathematical operations, voltage routing, and acoustic behavior.
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Data Processing & Metrics -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold text-stone-950 border-b border-stone-200 pb-2 mb-4">3. Data Processing & Metric Formulation</h2>
+      <p class="mb-4">
+        To mathematically compute communicative distortion, emotional states are projected onto the classical three-dimensional <strong>Valence-Arousal-Dominance (VAD)</strong> circumplex space (Mehrabian & Russell, 1974; Russell, 1980):
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 font-sans-ui text-sm mb-6">
+        <div class="paper-card p-3 rounded">
+          <strong>Valence ($V \in [0, 1]$)</strong>
+          <div class="text-xs text-stone-600 mt-1">Pleasantness: Dysphoria vs. Euphoria</div>
+        </div>
+        <div class="paper-card p-3 rounded">
+          <strong>Arousal ($A \in [0, 1]$)</strong>
+          <div class="text-xs text-stone-600 mt-1">Activation: Soporific calm vs. Kinetic frenzy</div>
+        </div>
+        <div class="paper-card p-3 rounded">
+          <strong>Dominance ($D \in [0, 1]$)</strong>
+          <div class="text-xs text-stone-600 mt-1">Control: Overwhelmed vs. Autonomous power</div>
+        </div>
+      </div>
+
+      <p class="mb-4">
+        All coordinates are normalized vectors in $[0, 1]^3$:
+        $$\vec{x}_{\text{sender}} = \begin{bmatrix} V_s \\ A_s \\ D_s \end{bmatrix}, \quad
+        \vec{x}_{\text{model}} = \begin{bmatrix} V_m \\ A_m \\ D_m \end{bmatrix}, \quad
+        \vec{x}_{\text{receiver}} = \begin{bmatrix} V_r \\ A_r \\ D_r \end{bmatrix}$$
+      </p>
+      <p class="mb-4">
+        The normalized Euclidean divergence $d(\vec{x}_a, \vec{x}_b) \in [0, 1]$ is scaled by the diagonal of the unit cube ($\sqrt{3} \approx 1.732$):
+        $$d(\vec{x}_a, \vec{x}_b) = \frac{\|\vec{x}_a - \vec{x}_b\|_2}{\sqrt{3}} = \frac{1}{\sqrt{3}} \sqrt{(V_a - V_b)^2 + (A_a - A_b)^2 + (D_a - D_b)^2}$$
+      </p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 font-sans-ui text-xs my-6">
+        <div class="p-4 rounded-lg bg-stone-100/70 border border-stone-200">
+          <div class="font-bold text-stone-900 mb-1">Model Gap ($d_{\text{model}}$)</div>
+          <div>$d(\vec{x}_{\text{sender}}, \vec{x}_{\text{model}})$</div>
+          <div class="text-stone-500 mt-2">Error between human writing and LLM semantic decoding.</div>
+        </div>
+        <div class="p-4 rounded-lg bg-amber-50 border border-amber-200">
+          <div class="font-bold text-amber-900 mb-1">Medium Gap ($d_{\text{medium}}$)</div>
+          <div>$d(\vec{x}_{\text{model}}, \vec{x}_{\text{receiver}})$</div>
+          <div class="text-stone-600 mt-2">Error introduced purely by the synthesizer's acoustic medium.</div>
+        </div>
+        <div class="p-4 rounded-lg bg-stone-100/70 border border-stone-200">
+          <div class="font-bold text-stone-900 mb-1">Total Misunderstanding ($d_{\text{total}}$)</div>
+          <div>$d(\vec{x}_{\text{sender}}, \vec{x}_{\text{receiver}})$</div>
+          <div class="text-stone-500 mt-2">Net divergence between sender emotion and receiver perception.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: 8-Channel Sound Mapping Table -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold text-stone-950 border-b border-stone-200 pb-2 mb-4">4. Generative Sound Mapping (8-Channel Control Voltages)</h2>
+      <p class="mb-4">
+        The psychological state $\{V, A, D, C\}$ directly computes 8 discrete control voltages ($0.0\,\text{V} - 10.0\,\text{V}$) transmitted via UDP/OSC to modulate Plaits, Plateau Reverb, and Clocked modules in VCV Rack:
+      </p>
+
+      <div class="overflow-x-auto my-6 paper-card rounded-lg">
+        <table class="w-full text-left table-academic">
+          <thead>
+            <tr>
+              <th>Ch</th>
+              <th>OSC Parameter</th>
+              <th>Function</th>
+              <th>Target Modular Module</th>
+              <th>Transfer Function</th>
+            </tr>
+          </thead>
+          <tbody class="font-sans-ui text-sm">
+            <tr>
+              <td class="font-bold">1</td>
+              <td class="font-mono-code text-xs">/vcv/timbre</td>
+              <td>Harmonic brightness</td>
+              <td>Plaits (Timbre CV)</td>
+              <td class="font-mono-code text-xs">$v_1 = 10 \cdot [0.7A + 0.3(1 - V)]$</td>
+            </tr>
+            <tr>
+              <td class="font-bold">2</td>
+              <td class="font-mono-code text-xs">/vcv/frequency</td>
+              <td>Pitch center register</td>
+              <td>Plaits (V/Oct modulation)</td>
+              <td class="font-mono-code text-xs">$v_2 = 10 \cdot [0.5 + 0.4(A - 0.5) + 0.1(D - 0.5)]$</td>
+            </tr>
+            <tr>
+              <td class="font-bold">3</td>
+              <td class="font-mono-code text-xs">/vcv/amplitude</td>
+              <td>Dynamic volume level</td>
+              <td>VCA Level / Drive</td>
+              <td class="font-mono-code text-xs">$v_3 = 10 \cdot [0.2 + 0.8A]$</td>
+            </tr>
+            <tr>
+              <td class="font-bold">4</td>
+              <td class="font-mono-code text-xs">/vcv/envelope</td>
+              <td>Decay transient time</td>
+              <td>ADSR Envelope Decay</td>
+              <td class="font-mono-code text-xs">$v_4 = 10 \cdot [1.0 - 0.8A]$</td>
+            </tr>
+            <tr>
+              <td class="font-bold">5</td>
+              <td class="font-mono-code text-xs">/vcv/mode</td>
+              <td>Synthesis engine select</td>
+              <td>Plaits (Model engine)</td>
+              <td class="font-mono-code text-xs">$v_5 = 10 \cdot V$</td>
+            </tr>
+            <tr>
+              <td class="font-bold">6</td>
+              <td class="font-mono-code text-xs">/vcv/chord</td>
+              <td>Chord color & voicing</td>
+              <td>Chord Engine Morph</td>
+              <td class="font-mono-code text-xs">$v_6 = 10 \cdot [0.5 + 0.5(V - 0.5)]$</td>
+            </tr>
+            <tr>
+              <td class="font-bold">7</td>
+              <td class="font-mono-code text-xs">/vcv/type</td>
+              <td>Space & Reverb diffusion</td>
+              <td>Plateau Reverb Decay</td>
+              <td class="font-mono-code text-xs">$v_7 = 10 \cdot [0.8(1 - D) + 0.2A]$</td>
+            </tr>
+            <tr>
+              <td class="font-bold">8</td>
+              <td class="font-mono-code text-xs">/vcv/noise</td>
+              <td>Chaos & Instability</td>
+              <td>Noise / Morph Modulation</td>
+              <td class="font-mono-code text-xs">$v_8 = 10 \cdot [0.7(1 - C) + 0.3A]$</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Section 5: Experimental Results -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold text-stone-950 border-b border-stone-200 pb-2 mb-4">5. Experimental Data & Results</h2>
+      <p class="mb-4">
+        Across the formal double-blind experimental trials, we selected the 6 representative multi-round sessions (21 complete rounds) to analyze communicative dynamics and acoustic impedance.
+      </p>
+
+      <!-- Table 1 -->
+      <h3 class="text-lg font-bold font-sans-ui text-stone-900 mb-2">Table 1: Representative Multi-Round Sessions & Distortion Breakdown</h3>
+      <div class="overflow-x-auto mb-8 paper-card rounded-lg">
+        <table class="w-full text-left table-academic">
+          <thead>
+            <tr>
+              <th>Session Identifier</th>
+              <th>Scenario / Mood</th>
+              <th class="text-center">Rounds</th>
+              <th class="text-right">$d_{\text{model}}$</th>
+              <th class="text-right">$d_{\text{medium}}$</th>
+              <th class="text-right">$d_{\text{total}}$</th>
+              <th>Key Dynamic</th>
+            </tr>
+          </thead>
+          <tbody class="font-sans-ui text-sm">
+            <tr>
+              <td class="font-bold text-stone-900">Evolution 6R</td>
+              <td>Comfort & Long Horizon</td>
+              <td class="text-center">6</td>
+              <td class="text-right font-mono-code">0.1874</td>
+              <td class="text-right font-mono-code font-bold text-amber-800">0.3762</td>
+              <td class="text-right font-mono-code font-bold text-stone-950">0.4514</td>
+              <td class="text-xs text-stone-600">Reassurance inverted into uncanny horror</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-stone-900">Session 3</td>
+              <td>Coffee & Anticipation</td>
+              <td class="text-center">4</td>
+              <td class="text-right font-mono-code">0.2162</td>
+              <td class="text-right font-mono-code font-bold text-amber-800">0.3111</td>
+              <td class="text-right font-mono-code font-bold text-stone-950">0.3805</td>
+              <td class="text-xs text-stone-600">Calibrated via iterative cues (0.563 → 0.165)</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-stone-900">Session 1</td>
+              <td>First Encounter</td>
+              <td class="text-center">4</td>
+              <td class="text-right font-mono-code">0.1931</td>
+              <td class="text-right font-mono-code font-bold text-amber-800">0.2653</td>
+              <td class="text-right font-mono-code font-bold text-stone-950">0.3575</td>
+              <td class="text-xs text-stone-600">Social posturing amplified into atmospheric drift</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-stone-900">Session 2</td>
+              <td>Drowsiness to Kinetic</td>
+              <td class="text-center">4</td>
+              <td class="text-right font-mono-code">0.2015</td>
+              <td class="text-right font-mono-code font-bold text-stone-700">0.1790</td>
+              <td class="text-right font-mono-code font-bold text-stone-950">0.2486</td>
+              <td class="text-xs text-stone-600">Somatic fatigue transitioned to movement</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-stone-900">Pilot 1</td>
+              <td>Solitude by the Sea</td>
+              <td class="text-center">3</td>
+              <td class="text-right font-mono-code">0.1919</td>
+              <td class="text-right font-mono-code font-bold text-amber-800">0.3603</td>
+              <td class="text-right font-mono-code font-bold text-stone-950">0.4139</td>
+              <td class="text-xs text-stone-600">Reflection split across harsh registers</td>
+            </tr>
+            <tr class="bg-amber-50/50 font-semibold">
+              <td class="text-stone-950">Group Mean</td>
+              <td>Pooled Trials</td>
+              <td class="text-center">21</td>
+              <td class="text-right font-mono-code">0.1980</td>
+              <td class="text-right font-mono-code text-amber-900">0.2984</td>
+              <td class="text-right font-mono-code text-stone-950">0.3704</td>
+              <td class="text-xs text-amber-900">Medium gap exceeds model error by 50.7%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Table 2: Model Ablation -->
+      <h3 class="text-lg font-bold font-sans-ui text-stone-900 mb-2">Table 2: Architecture Ablation & Inference Latency</h3>
+      <div class="overflow-x-auto mb-6 paper-card rounded-lg">
+        <table class="w-full text-left table-academic">
+          <thead>
+            <tr>
+              <th>Architecture Backend</th>
+              <th>Deployment</th>
+              <th class="text-right">Avg Latency</th>
+              <th class="text-right">$d_{\text{model}}$</th>
+              <th class="text-right">$d_{\text{medium}}$</th>
+              <th class="text-right">$d_{\text{total}}$</th>
+            </tr>
+          </thead>
+          <tbody class="font-sans-ui text-sm">
+            <tr>
+              <td class="font-bold text-stone-900">Local Qwen2.5-1.5B LoRA</td>
+              <td>On-Device Apple Silicon (MPS)</td>
+              <td class="text-right font-mono-code">4403.0 ms</td>
+              <td class="text-right font-mono-code">0.2162</td>
+              <td class="text-right font-mono-code">0.3111</td>
+              <td class="text-right font-mono-code font-bold">0.3805</td>
+            </tr>
+            <tr class="bg-stone-50">
+              <td class="font-bold text-emerald-900">DeepSeek-V4 API</td>
+              <td>Distributed Cloud Inference</td>
+              <td class="text-right font-mono-code font-bold text-emerald-700">858.0 ms</td>
+              <td class="text-right font-mono-code font-bold text-emerald-700">0.1587</td>
+              <td class="text-right font-mono-code">0.2161</td>
+              <td class="text-right font-mono-code font-bold text-emerald-900">0.2697</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Key Findings Callout -->
+      <div class="paper-card p-6 rounded-xl border-l-4 border-l-amber-700 mb-6 bg-stone-50">
+        <h4 class="font-sans-ui text-sm font-bold uppercase text-stone-900 mb-2">Key Analytical Discoveries</h4>
+        <ol class="list-decimal pl-5 space-y-2 text-stone-800 text-[1rem]">
+          <li><strong>The Acoustic Medium Dominates Distortion ($d_{\text{medium}} > d_{\text{model}}$ in 80% of sessions)</strong>: Natural language processing captures sentiment with modest deviation ($\mu = 0.1980$), but physical transductions across synthetic timbre introduce severe entropy ($\mu = 0.2984$), skewing perception by +50.7%.</li>
+          <li><strong>Frontier Models Cannot Bypass Sensory Ambiguity</strong>: DeepSeek-V4 slashed text inference error by 26.6% and latency by 80.5%, yet receiver misunderstanding persisted ($d_{\text{medium}} = 0.2161$). Scaling computational intelligence does not eliminate the physical impedance of the medium.</li>
+        </ol>
+      </div>
+
+      <!-- Trend Charts Gallery -->
+      <h3 class="text-lg font-bold font-sans-ui text-stone-900 mb-3">Empirical Run Plots & Coordinate Drift</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+        <div class="paper-card p-3 rounded-lg">
+          <img src="media/perf_20261003_114155.png" alt="Evolution 6R Run Plot" class="w-full rounded border border-stone-200">
+          <div class="font-sans-ui text-xs text-stone-500 mt-2 text-center">Fig 1: Evolution 6R — Trajectory of Long-Horizon Inversion</div>
+        </div>
+        <div class="paper-card p-3 rounded-lg">
+          <img src="media/perf_20261003_134304.png" alt="Session 3 Run Plot" class="w-full rounded border border-stone-200">
+          <div class="font-sans-ui text-xs text-stone-500 mt-2 text-center">Fig 2: Session 3 — Progressive Convergence (0.563 → 0.165)</div>
+        </div>
+        <div class="paper-card p-3 rounded-lg">
+          <img src="media/perf_20261003_132445.png" alt="Session 2 Run Plot" class="w-full rounded border border-stone-200">
+          <div class="font-sans-ui text-xs text-stone-500 mt-2 text-center">Fig 3: Session 2 — Kinetic Transition & Stable Resonance</div>
+        </div>
+        <div class="paper-card p-3 rounded-lg">
+          <img src="media/perf_20261003_135740.png" alt="Session 4 Run Plot" class="w-full rounded border border-stone-200">
+          <div class="font-sans-ui text-xs text-stone-500 mt-2 text-center">Fig 4: Session 4 — DeepSeek-V4 Accelerated Inference Trial</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 6: Qualitative Case Studies & Video Footage -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold text-stone-950 border-b border-stone-200 pb-2 mb-4">6. Qualitative Case Studies & Double-Blind Screen Recordings</h2>
+      <p class="mb-6">
+        Below are complete transcripts, psychoacoustic analyses, and synchronized performance screen captures from the lab sessions.
+      </p>
+
+      <!-- Case Tabs -->
+      <div class="font-sans-ui flex space-x-2 mb-4">
+        <button onclick="switchCase('case1')" id="btn-case1" class="tab-btn active px-4 py-2 text-sm font-semibold rounded-t-lg border border-b-0 border-stone-300">
+          Case Study 1: The "Creepy Comfort" Paradox
+        </button>
+        <button onclick="switchCase('case2')" id="btn-case2" class="tab-btn px-4 py-2 text-sm font-semibold rounded-t-lg border border-b-0 border-stone-300 bg-stone-100 text-stone-600">
+          Case Study 2: Mutual Grounding & Negotiation
+        </button>
+      </div>
+
+      <!-- Case 1 Container -->
+      <div id="case1-content" class="paper-card p-6 rounded-b-xl rounded-tr-xl mb-6">
+        <div class="flex flex-wrap justify-between items-baseline mb-4">
+          <h3 class="text-xl font-bold text-stone-900">Case Study 1: When Optimism Inverts into Alarm</h3>
+          <span class="font-sans-ui text-xs text-stone-500 font-mono-code">Database: perf_20261003_111250.db</span>
+        </div>
+
+        <p class="mb-4">
+          In Round 1, Participant A typed: <em>"Your dream will come true."</em> with positive self-assessed confidence ($V=0.63, A=0.40, D=0.93$). The language model inferred high energy ($A=0.60$). In Eurorack voltage mapping, this drove Plaits' 2-operator FM timbre to maximal brightness while clamping envelope decay.
+        </p>
+
+        <div class="bg-stone-50 p-4 rounded-lg border border-stone-200 font-sans-ui text-sm mb-4">
+          <div class="font-semibold text-stone-900 mb-1">Receiver Acoustic Reaction (Participant B):</div>
+          <blockquote class="italic text-amber-900 pl-3 border-l-2 border-amber-700">
+            "He definitely wants to comfort me because the audio sounds deadass creepy. But that's not what I'm interpreting. Maybe he is confused."
+          </blockquote>
+          <div class="text-xs text-stone-500 mt-2 font-mono-code">
+            Total Misunderstanding Score: $d_{\text{total}} = 0.579$ (Highest divergence in session)
+          </div>
+        </div>
+
+        <!-- Video Player for Session 1 / Evolution -->
+        <div class="my-4">
+          <div class="font-sans-ui text-xs font-semibold text-stone-700 mb-2">Double-Blind Lab Recording: Session 1 Audio-Visual Log</div>
+          <video controls class="w-full rounded-lg border border-stone-300 bg-black max-h-[420px]">
+            <source src="media/session1_recording.mp4" type="video/mp4">
+            Your browser does not support HTML5 video playback.
+          </video>
+          <div class="font-sans-ui text-xs text-stone-500 mt-1">Footage recorded live: October 3, 2026 11:42 AM.</div>
+        </div>
+      </div>
+
+      <!-- Case 2 Container -->
+      <div id="case2-content" class="paper-card p-6 rounded-b-xl rounded-tr-xl mb-6 hidden">
+        <div class="flex flex-wrap justify-between items-baseline mb-4">
+          <h3 class="text-xl font-bold text-stone-900">Case Study 2: Struggling for Mutual Grounding</h3>
+          <span class="font-sans-ui text-xs text-stone-500 font-mono-code">Database: perf_20261003_134304.db</span>
+        </div>
+
+        <p class="mb-4">
+          In Session 3, participants were tasked with discussing a mundane anticipation of coffee. In Round 0, abstract poetry produced total confusion ($d_{\text{total}} = 0.563$, receiver reported: <em>"I feel you are under much stress"</em>). Across 4 rounds, the sender calibrated their syntax, replacing mood descriptions with direct sonic instructions (<em>"Add more beat and make it cheerful"</em>).
+        </p>
+
+        <div class="bg-stone-50 p-4 rounded-lg border border-stone-200 font-sans-ui text-sm mb-4">
+          <div class="font-semibold text-stone-900 mb-1">Convergence Milestone (Round 3):</div>
+          <blockquote class="italic text-emerald-900 pl-3 border-l-2 border-emerald-600">
+            "Oh things are getting better!!!! Finally. I think she realized what I am talking about."
+          </blockquote>
+          <div class="text-xs text-stone-500 mt-2 font-mono-code">
+            Misunderstanding reduced from $0.563 \longrightarrow 0.165$ (Lowest error across all sessions)
+          </div>
+        </div>
+
+        <!-- Video Player for Session 3 -->
+        <div class="my-4">
+          <div class="font-sans-ui text-xs font-semibold text-stone-700 mb-2">Double-Blind Lab Recording: Session 3 Convergence Session</div>
+          <video controls class="w-full rounded-lg border border-stone-300 bg-black max-h-[420px]">
+            <source src="media/session3_recording.mp4" type="video/mp4">
+            Your browser does not support HTML5 video playback.
+          </video>
+          <div class="font-sans-ui text-xs text-stone-500 mt-1">Footage recorded live: October 3, 2026 13:45 PM.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 7: Conclusion -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold text-stone-950 border-b border-stone-200 pb-2 mb-4">7. Conclusion</h2>
+      <p class="mb-4">
+        The primary empirical finding of <em>A Machine for Misunderstanding</em> is that when human expression is forced through an automated intermediary, the medium itself introduces substantially more variance than the words themselves ($d_{\text{medium}} > d_{\text{model}}$ across 80% of trials). Natural language models are increasingly capable of approximating semantic intent; however, once those semantic representations are re-embodied into physical, continuous media—whether analog synthesizer voltages or algorithmic social media feeds—the structural properties of the medium dominate the interpretation. The medium does not merely transmit meaning; it possesses its own acoustic and affective agency that reshapes and alienates original intentions.
+      </p>
+      <p class="mb-4">
+        In contemporary digital culture, where authentic interpersonal connection is increasingly replaced by algorithmic feeds and flattened digital text, understanding this communicative gap is urgent. By quantifying how meaning shears and drifts across generative mediation, this study demonstrates that seamless digital communication is an illusion. Recognizing the inevitable distortion introduced by media is the first step toward reclaiming mindful, critical engagement with the computational systems that structure modern human interaction.
+      </p>
+    </section>
+
+    <!-- References -->
+    <footer class="pt-8 border-t border-stone-300 text-stone-600 font-sans-ui text-sm">
+      <h3 class="font-bold text-stone-900 uppercase text-xs tracking-wider mb-3">References</h3>
+      <ol class="list-decimal pl-5 space-y-1.5 text-xs leading-relaxed">
+        <li>McLuhan, M. (1964). <em>Understanding Media: The Extensions of Man</em>. McGraw-Hill.</li>
+        <li>Mehrabian, A., & Russell, J. A. (1974). <em>An Approach to Environmental Psychology</em>. The MIT Press.</li>
+        <li>Russell, J. A. (1980). A circumplex model of affect. <em>Journal of Personality and Social Psychology</em>, 39(6), 1161–1178.</li>
+      </ol>
+      <div class="mt-8 text-center text-stone-400 text-xs">
+        Portfolio Project 2 • A Machine for Misunderstanding • Double-Blind Empirical Dossier
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Interactive Logic Scripts -->
+  <script>
+    // 1. Interactive Pipeline Inspector
+    function showPipeline(node) {
+      const detail = document.getElementById('pipeline-detail');
+      const nodes = ['sender', 'llm', 'vcv', 'receiver'];
+      nodes.forEach(n => {
+        const el = document.getElementById('node-' + n);
+        if (n === node) {
+          el.className = 'cursor-pointer border-2 border-amber-800 bg-amber-50 p-4 rounded-lg transition shadow-md';
+        } else {
+          el.className = 'cursor-pointer border border-stone-300 bg-white p-4 rounded-lg transition hover:shadow-md';
+        }
+      });
+
+      if (node === 'sender') {
+        detail.innerHTML = '<strong class="text-stone-900 text-sm">① Sender (Participant A):</strong> Enters natural textual reflections describing immediate internal somatic state. Self-evaluates baseline affective coordinates on three continuous sliders: Valence, Arousal, Dominance $\\in [0, 1]$. Coordinates are bundled with timestamp into JSON payload.';
+      } else if (node === 'llm') {
+        detail.innerHTML = '<strong class="text-stone-900 text-sm">② Language Model Extractor:</strong> Evaluates lexical features using on-device Qwen2.5-1.5B LoRA (4.4s latency) or cloud DeepSeek-V4 (858ms latency). Generates continuous quadruplet $\\{V, A, D, C\\}$ where $C$ represents semantic Confidence/Certainty.';
+      } else if (node === 'vcv') {
+        detail.innerHTML = '<strong class="text-stone-900 text-sm">③ Modular Synthesizer (VCV Rack):</strong> Python engine calculates 8-channel control voltages ($0.0\\,\\text{V} - 10.0\\,\\text{V}$) via UDP OSC. Modulates Plaits timbral brightness ($v_1$), pitch center ($v_2$), dynamic VCA ($v_3$), envelope decay ($v_4$), Plaits engine ($v_5$), chord harmony ($v_6$), and Plateau reverb diffusion ($v_7$).';
+      } else if (node === 'receiver') {
+        detail.innerHTML = '<strong class="text-stone-900 text-sm">④ Receiver (Participant B):</strong> Double-blind listening through studio monitoring headphones in an isolated room. Blind to sender text and model values. Logs perceived affective coordinates and qualitative phenomenological notes. Roles swap on subsequent cycle.';
+      }
+
+      if (window.renderMathInElement) {
+        renderMathInElement(detail, {delimiters: [{left: '$', right: '$', display: false}]});
+      }
+    }
+
+    // 2. Case Study Switcher
+    function switchCase(tab) {
+      const c1 = document.getElementById('case1-content');
+      const c2 = document.getElementById('case2-content');
+      const b1 = document.getElementById('btn-case1');
+      const b2 = document.getElementById('btn-case2');
+
+      if (tab === 'case1') {
+        c1.classList.remove('hidden');
+        c2.classList.add('hidden');
+        b1.className = 'tab-btn active px-4 py-2 text-sm font-semibold rounded-t-lg border border-b-0 border-stone-300';
+        b2.className = 'tab-btn px-4 py-2 text-sm font-semibold rounded-t-lg border border-b-0 border-stone-300 bg-stone-100 text-stone-600';
+      } else {
+        c1.classList.add('hidden');
+        c2.classList.remove('hidden');
+        b2.className = 'tab-btn active px-4 py-2 text-sm font-semibold rounded-t-lg border border-b-0 border-stone-300';
+        b1.className = 'tab-btn px-4 py-2 text-sm font-semibold rounded-t-lg border border-b-0 border-stone-300 bg-stone-100 text-stone-600';
+      }
+    }
+  </script>
+</body>
+</html>

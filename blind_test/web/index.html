@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Machine for Misunderstanding — Blind Test</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Background Noise & Glow Overlay -->
+  <div class="bg-noise" aria-hidden="true"></div>
+  <div class="bg-glow" aria-hidden="true"></div>
+
+  <!-- Global Application Shell -->
+  <div class="app-shell">
+    <!-- Top System Telemetry Bar -->
+    <header class="telemetry-bar">
+      <div class="telemetry-left">
+        <span class="project-title">A MACHINE FOR MISUNDERSTANDING</span>
+        <span class="sub-label">Project 2 · Affective Acoustic Blind Test</span>
+      </div>
+      <div class="telemetry-center">
+        <span class="badge" id="badge-session">SESSION: <strong id="val-session-id">--</strong></span>
+        <span class="badge" id="badge-round">ROUND: <strong id="val-round-idx">--</strong></span>
+        <span class="badge" id="badge-role">ROLE: <strong id="val-role">OBSERVER</strong></span>
+        <span class="badge" id="badge-status">STATE: <strong id="val-status">DISCONNECTED</strong></span>
+      </div>
+      <div class="telemetry-right">
+        <span class="badge version-badge">v<strong id="val-version">0</strong></span>
+        <div class="conn-pill" id="conn-indicator">
+          <span class="pill-dot"></span>
+          <span class="pill-text" id="conn-status-text">OFFLINE</span>
+        </div>
+        <button id="btn-disconnect" class="btn-ghost btn-sm" title="Disconnect and clear local session" style="display: none;">Reset</button>
+      </div>
+    </header>
+
+    <!-- Global Notification Banner -->
+    <div id="notification-banner" class="notification-banner hidden" role="alert">
+      <span id="notification-msg"></span>
+      <button class="banner-close" id="btn-banner-close">&times;</button>
+    </div>
+
+    <!-- Main Dynamic Content Workspace -->
+    <main class="workspace-area">
+      <!-- PANEL 1: JOIN VIEW -->
+      <section id="panel-join" class="glass-panel panel-card active">
+        <div class="panel-header">
+          <h2>PARTICIPANT GATEWAY</h2>
+          <p class="panel-desc">Enter the laboratory session credentials to connect to the dual-blind gateway.</p>
+        </div>
+        <form id="form-join" class="form-grid">
+          <div class="form-group">
+            <label for="input-session-id">Session Identifier</label>
+            <input type="text" id="input-session-id" placeholder="e.g. s_manual_001" autocomplete="off" required spellcheck="false">
+            <span class="field-hint">Specified by experiment coordinator</span>
+          </div>
+
+          <div class="form-group">
+            <label>Assigned Participant Slot</label>
+            <div class="radio-selector">
+              <label class="radio-card">
+                <input type="radio" name="join-label" value="A" checked>
+                <div class="radio-body">
+                  <span class="slot-name">Participant A</span>
+                  <span class="slot-desc">Round 1 Sender → Round 2 Receiver</span>
+                </div>
+              </label>
+              <label class="radio-card">
+                <input type="radio" name="join-label" value="B">
+                <div class="radio-body">
+                  <span class="slot-name">Participant B</span>
+                  <span class="slot-desc">Round 1 Receiver → Round 2 Sender</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="input-client-token">Session Security Token (X-Session-Token)</label>
+            <input type="password" id="input-client-token" placeholder="Enter private authorization token" required autocomplete="current-password">
+            <span class="field-hint">Never shared with peer; verified via SHA-256 hash</span>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" id="btn-submit-join" class="btn-primary">Connect to Session</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- PANEL 2: LOBBY & PREPARATION VIEW -->
+      <section id="panel-lobby" class="glass-panel panel-card hidden">
+        <div class="panel-header">
+          <h2>EXPERIMENT LOBBY</h2>
+          <p class="panel-desc">Awaiting both participants to confirm listening readiness before acoustic loop activation.</p>
+        </div>
+
+        <div class="lobby-grid">
+          <div class="lobby-col">
+            <h3>Registered Peers</h3>
+            <ul id="lobby-participants-list" class="participant-list">
+              <!-- Populated by JavaScript -->
+            </ul>
+          </div>
+          <div class="lobby-col status-box">
+            <h3>Acoustic Environment</h3>
+            <p class="status-note">
+              Monitor output is continuously streaming generative sound. Please verify headphone or studio monitor levels.
+            </p>
+            <div class="acoustic-card">
+              <span class="acoustic-title">OSC Carrier Status</span>
+              <span class="acoustic-val" id="lobby-acoustic-val">WAITING</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lobby-actions">
+          <button id="btn-lobby-ready" class="btn-primary">Mark Ready</button>
+          <button id="btn-lobby-start" class="btn-secondary" style="display: none;">Start Session</button>
+          <span id="lobby-waiting-hint" class="waiting-hint">Waiting for both participants to be READY...</span>
+        </div>
+      </section>
+
+      <!-- PANEL 3: INTERACTIVE ROUND WORKSPACE (SENDER / RECEIVER DUAL INTERFACE) -->
+      <section id="panel-round" class="glass-panel panel-card hidden">
+        <div class="round-status-strip">
+          <div class="strip-item">
+            <span class="strip-label">CURRENT TURN</span>
+            <span class="strip-val highlight" id="round-role-banner">SENDER TURN</span>
+          </div>
+          <div class="strip-item">
+            <span class="strip-label">ACOUSTIC CARRIER</span>
+            <span class="strip-val" id="round-acoustic-status">ACTIVE</span>
+          </div>
+          <div class="strip-item">
+            <span class="strip-label">MARKER COMMITTED</span>
+            <span class="strip-val" id="round-marker-status">NO</span>
+          </div>
+        </div>
+
+        <!-- SENDER INTERACTION VIEW -->
+        <div id="sender-view" class="role-workspace hidden">
+          <div class="workspace-intro">
+            <h3>Sender Somatic Inscription</h3>
+            <p>Describe your immediate physical phenomenological somatic sensation. Model and VCV will translate this into acoustic modulation.</p>
+          </div>
+
+          <form id="form-sender-input" class="form-grid">
+            <div class="form-group full-width">
+              <label for="sender-text-input">Phenomenological Description (Somatic Inscription)</label>
+              <textarea id="sender-text-input" rows="4" placeholder="e.g. My chest feels cold and hollow; a vibrating pressure rises through my throat..." required></textarea>
+              <span class="field-hint">Describe raw physical feelings without abstract labels.</span>
+            </div>
+
+            <!-- VADC Coordinate Sliders -->
+            <div class="vadc-matrix">
+              <div class="slider-block">
+                <div class="slider-header">
+                  <label for="sender-val-v">Valence (Pleasure / Aversion)</label>
+                  <span class="slider-val" id="disp-sender-v">0.50</span>
+                </div>
+                <input type="range" id="sender-val-v" min="0" max="1" step="0.01" value="0.5">
+                <div class="slider-scale"><span>0.0 Negative</span><span>1.0 Positive</span></div>
+              </div>
+
+              <div class="slider-block">
+                <div class="slider-header">
+                  <label for="sender-val-a">Arousal (Excitement / Lethargy)</label>
+                  <span class="slider-val" id="disp-sender-a">0.50</span>
+                </div>
+                <input type="range" id="sender-val-a" min="0" max="1" step="0.01" value="0.5">
+                <div class="slider-scale"><span>0.0 Sluggish</span><span>1.0 Hyperactive</span></div>
+              </div>
+
+              <div class="slider-block">
+                <div class="slider-header">
+                  <label for="sender-val-d">Dominance (Agency / Vulnerability)</label>
+                  <span class="slider-val" id="disp-sender-d">0.50</span>
+                </div>
+                <input type="range" id="sender-val-d" min="0" max="1" step="0.01" value="0.5">
+                <div class="slider-scale"><span>0.0 Powerless</span><span>1.0 In Control</span></div>
+              </div>
+
+              <div class="slider-block">
+                <div class="slider-header">
+                  <label for="sender-val-c">Confidence (Certainty / Ambiguity)</label>
+                  <span class="slider-val" id="disp-sender-c">0.80</span>
+                </div>
+                <input type="range" id="sender-val-c" min="0" max="1" step="0.01" value="0.8">
+                <div class="slider-scale"><span>0.0 Uncertain</span><span>1.0 Definite</span></div>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" id="btn-submit-sender" class="btn-primary">Transmit Somatic Inscription</button>
+            </div>
+          </form>
+
+          <!-- Own Input Confirmation (Sender Only) -->
+          <div id="sender-submitted-summary" class="submitted-box hidden">
+            <h4>Transmitted Inscription (Locked)</h4>
+            <blockquote id="sender-submitted-text"></blockquote>
+            <div id="sender-submitted-coords" class="coords-tag-list"></div>
+            <p class="waiting-receiver-hint">Acoustic state dispatched. Waiting for Receiver response...</p>
+          </div>
+        </div>
+
+        <!-- RECEIVER INTERACTION VIEW -->
+        <div id="receiver-view" class="role-workspace hidden">
+          <div class="workspace-intro">
+            <h3>Receiver Acoustic Inscription</h3>
+            <p>Listen attentively to the evolving sound. Record the somatic state and shift induced in you by the synthesis.</p>
+          </div>
+
+          <div id="receiver-waiting-marker" class="standby-notice">
+            <div class="spinner"></div>
+            <p>Listening to room carrier... Waiting for Sender to transmit and commit acoustic marker.</p>
+          </div>
+
+          <form id="form-receiver-input" class="form-grid hidden">
+            <div class="form-group full-width">
+              <label for="receiver-shift-input">Felt Somatic Shift & Sensation</label>
+              <textarea id="receiver-shift-input" rows="3" placeholder="e.g. Felt a sudden drop in room temperature, tension focused behind the eyes..." required></textarea>
+            </div>
+
+            <!-- Receiver VADC Sliders -->
+            <div class="vadc-matrix">
+              <div class="slider-block">
+                <div class="slider-header">
+                  <label for="receiver-val-v">Felt Valence</label>
+                  <span class="slider-val" id="disp-receiver-v">0.50</span>
+                </div>
+                <input type="range" id="receiver-val-v" min="0" max="1" step="0.01" value="0.5">
+                <div class="slider-scale"><span>0.0 Negative</span><span>1.0 Positive</span></div>
+              </div>
+
+              <div class="slider-block">
+                <div class="slider-header">
+                  <label for="receiver-val-a">Felt Arousal</label>
+                  <span class="slider-val" id="disp-receiver-a">0.50</span>
+                </div>
+                <input type="range" id="receiver-val-a" min="0" max="1" step="0.01" value="0.5">
+                <div class="slider-scale"><span>0.0 Sluggish</span><span>1.0 Hyperactive</span></div>
+              </div>
+
+              <div class="slider-block">
+                <div class="slider-header">
+                  <label for="receiver-val-d">Felt Dominance</label>
+                  <span class="slider-val" id="disp-receiver-d">0.50</span>
+                </div>
+                <input type="range" id="receiver-val-d" min="0" max="1" step="0.01" value="0.5">
+                <div class="slider-scale"><span>0.0 Powerless</span><span>1.0 In Control</span></div>
+              </div>
+
+              <div class="slider-block">
+                <div class="slider-header">
+                  <label for="receiver-val-c">Assessment Confidence</label>
+                  <span class="slider-val" id="disp-receiver-c">0.80</span>
+                </div>
+                <input type="range" id="receiver-val-c" min="0" max="1" step="0.01" value="0.8">
+                <div class="slider-scale"><span>0.0 Uncertain</span><span>1.0 Definite</span></div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="checkbox-container">
+                <input type="checkbox" id="receiver-confirmed-check" checked>
+                <span class="checkmark"></span>
+                <span>Confirmed audible acoustic marker reception from monitors</span>
+              </label>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" id="btn-submit-receiver" class="btn-primary">Submit Evaluation & Complete Round</button>
+            </div>
+          </form>
+
+          <div id="receiver-submitted-summary" class="submitted-box hidden">
+            <h4>Evaluation Registered</h4>
+            <p>Your perception has been committed. Awaiting peer continuation decision...</p>
+          </div>
+        </div>
+
+        <!-- ROUND COMPLETE & CONTINUATION VOTING -->
+        <div id="round-complete-view" class="continuation-box hidden">
+          <h3>Round Interaction Finished</h3>
+          <p id="round-complete-msg">Both participants must decide whether to advance to the next round or terminate the dialogue.</p>
+          <div class="vote-status-bar" id="vote-status-bar">
+            <!-- Populated dynamically -->
+          </div>
+          <div class="continuation-actions">
+            <button id="btn-vote-continue" class="btn-primary">Vote: Continue to Next Round</button>
+            <button id="btn-vote-end" class="btn-danger">End Experiment & Settle</button>
+          </div>
+        </div>
+
+        <!-- Real-time 2D Projection Canvas (Allowed Public Coordinates Only) -->
+        <div class="canvas-container">
+          <div class="canvas-header">
+            <h4>Active Affective Space (V-A Projection)</h4>
+            <span class="canvas-sub">Visualizing only authorized public coordinates in current round</span>
+          </div>
+          <canvas id="active-coords-canvas" width="400" height="260"></canvas>
+        </div>
+      </section>
+
+      <!-- PANEL 4: SETTLEMENT & FULL UNMASKED REVELATION VIEW -->
+      <section id="panel-settlement" class="glass-panel panel-card hidden">
+        <div class="panel-header settlement-header">
+          <h2>FINAL SETTLEMENT & REVELATION</h2>
+          <p class="panel-desc">All blind barriers are dissolved. Review the complete semantic-acoustic trajectory and misunderstanding geometry across all rounds.</p>
+        </div>
+
+        <!-- Trajectory 3D/2D Multi-Round Visualization Canvas -->
+        <div class="revelation-grid">
+          <div class="revelation-canvas-card">
+            <h3>Multi-Round Affective Trajectory</h3>
+            <canvas id="revelation-canvas" width="560" height="340"></canvas>
+            <div class="legend-bar">
+              <span class="legend-item"><span class="dot dot-input"></span> Sender Intent (Input)</span>
+              <span class="legend-item"><span class="dot dot-model"></span> Machine Interpretation (Model)</span>
+              <span class="legend-item"><span class="dot dot-receiver"></span> Receiver Perception</span>
+            </div>
+          </div>
+
+          <div class="metrics-summary-card">
+            <h3>Cumulative Misunderstanding Metrics</h3>
+            <div id="metrics-stat-grid" class="stat-grid">
+              <!-- Populated by revelation.js -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Exhaustive Audit Table of All Rounds -->
+        <div class="rounds-audit-section">
+          <h3>Full Round-by-Round Unmasked Trajectory</h3>
+          <div id="rounds-audit-list" class="audit-list">
+            <!-- Populated by revelation.js -->
+          </div>
+        </div>
+      </section>
+
+      <!-- PANEL 5: ERROR OR ABORTED VIEW -->
+      <section id="panel-error" class="glass-panel panel-card hidden">
+        <div class="panel-header error-header">
+          <h2 id="error-title">EXPERIMENT ANOMALY DETECTED</h2>
+          <p id="error-desc" class="panel-desc">An unrecoverable state error or premature abort occurred.</p>
+        </div>
+        <div class="error-detail-box">
+          <pre id="error-trace-text"></pre>
+        </div>
+        <div class="form-actions">
+          <button id="btn-error-reset" class="btn-secondary">Reset Client</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Non-framework Script Loading in Strict Order (Cache Busted) -->
+  <script src="coords.js?v=20261003_2"></script>
+  <script src="revelation.js?v=20261003_2"></script>
+  <script src="app.js?v=20261003_2"></script>
+</body>
+</html>
