@@ -3,7 +3,7 @@
 
 **Author**: Rex Li  
 **Project**: Portfolio Project 2 (`portfolio/project2/`)  
-**Data**: 10 Sessions / 31 Communication Cycles (`portfolio/project2/blind_test/data/`)  
+**Data**: 10 Sessions / 36 Communication Cycles (`portfolio/project2/blind_test/data/`)  
 
 ---
 
@@ -11,7 +11,7 @@
 
 Modern social media and fast fashion culture have led to an unprecedented failure of text. As human communication is mediated through algorithmic feeds, automated curation, and fast-paced platforms, original subjective meanings are consistently distorted. In this project, we treat generative ambient music as an analog for digital media itself. We built **A Machine for Misunderstanding**, an experimental human-computer-human system that forces two participants to converse solely through generative synthesis driven by language models.
 
-Across 10 sessions and 31 complete interaction cycles, we measured the divergence between what people meant and what was perceived. Our data demonstrates that the acoustic medium introduces substantially greater distortion than the language model itself ($d_{\text{medium}} > d_{\text{model}}$ in 7 of 10 sessions), and that positive intentions are often distorted by the medium into disturbing acoustic experiences. This experiment visualizes how modern media fundamentally destabilizes human expression, turning communication into an ongoing struggle against mediation.
+Across 10 sessions and 36 complete interaction cycles, we measured the divergence between what people meant and what was perceived. Our data demonstrates that the acoustic medium introduces substantially greater distortion than the language model itself ($d_{\text{medium}} > d_{\text{model}}$ in 7 of 10 sessions), and that positive intentions are often distorted by the medium into disturbing acoustic experiences. This experiment visualizes how modern media fundamentally destabilizes human expression, turning communication into an ongoing struggle against mediation.
 
 ---
 

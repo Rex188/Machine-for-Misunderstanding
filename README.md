@@ -48,7 +48,7 @@ The code for this is in `blind_test/metrics.py`. Every round is stored in SQLite
 
 ### What I found
 
-From the report (10 sessions, 31 rounds in total; the tables use 5 representative sessions, 21 rounds):
+From the report (10 sessions, 36 rounds in total; the tables use 5 representative sessions, 21 rounds):
 
 - **The sound lost more meaning than the model did.** Mean `d_model` was 0.1980 and mean `d_medium` was 0.2984. In the data notes, `d_medium > d_model` in 7 of 10 sessions.
 - **Kind messages could sound threatening.** In one 6-round session, the sender wrote *"Your dream will come true."* The receiver heard something "a little scary and uncertain". Later in the same session the receiver wrote: *"He def wanna comfort me because the audio sounds deadass creepy."* ([CASE_STUDIES.md](CASE_STUDIES.md))
