@@ -119,7 +119,7 @@ This dataset highlights human interaction across distinct conversational context
 | **Session 1** | First Meeting & Uncertainty | 4 | 0.1931 | 0.2653 | **0.3575** | Ambiguous social posturing amplified into atmospheric drift |
 | **Session 2** | Post-lunch Drowsiness to Movement | 4 | 0.2015 | 0.1790 | **0.2486** | Somatic fatigue successfully transitioned into kinetic rhythm |
 | **Pilot 1** | Solitude by the Sea & High Energy | 3 | 0.1919 | 0.3603 | **0.4139** | Solitary reflection sharply split across dynamic synth registers |
-| **Group Average** | *Pooled Representative Trials* | **21** | **0.1980** | **0.2984** | **0.3704** | **Medium distortion exceeds model gap by 50.7%** |
+| **Group Average** | *Mean of session means* | **21** | **0.1980** | **0.2984** | **0.3704** | **Medium distortion exceeds model gap by 50.7%** |
 
 ### 5.2 Table 2: Model Architecture Ablation & Latency Comparison
 To determine whether larger parameter capacity and external reasoning scale can eliminate the communicative gap, we conducted an ablation comparing our local fine-tuned edge model (Session 3) against the frontier **DeepSeek API** (`deepseek-chat`, Session 4). Both were 4-round sessions, but with different conversation texts, so this is a cross-session comparison rather than an identical setting.
