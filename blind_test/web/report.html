@@ -93,7 +93,7 @@
       <div class="font-sans-ui flex flex-wrap items-center gap-y-2 gap-x-6 text-sm text-stone-700 py-3 border-y border-stone-200">
         <div><strong class="text-stone-900">Author:</strong> Rex Li</div>
         <div><strong class="text-stone-900">Affiliation:</strong> Nanjing Foreign Language School</div>
-        <div><strong class="text-stone-900">Scope:</strong> 10 Sessions / 31 Communication Cycles</div>
+        <div><strong class="text-stone-900">Scope:</strong> 10 Sessions / 36 Communication Cycles</div>
         <div><strong class="text-stone-900">Date:</strong> October 2026</div>
       </div>
 
@@ -101,12 +101,12 @@
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 my-8 font-sans-ui">
         <div class="paper-card p-4 rounded-lg text-center">
           <div class="text-xs text-stone-500 uppercase tracking-wider mb-1 font-semibold">Total Cycles</div>
-          <div class="text-2xl font-bold text-stone-900">31</div>
+          <div class="text-2xl font-bold text-stone-900">36</div>
           <div class="text-xs text-stone-500">10 double-blind sessions</div>
         </div>
         <div class="paper-card p-4 rounded-lg text-center">
           <div class="text-xs text-stone-500 uppercase tracking-wider mb-1 font-semibold">Medium Dominance</div>
-          <div class="text-2xl font-bold text-amber-800">80%</div>
+          <div class="text-2xl font-bold text-amber-800">7 of 10</div>
           <div class="text-xs text-stone-500 font-mono-code text-[11px]">$d_{\text{medium}} > d_{\text{model}}$</div>
         </div>
         <div class="paper-card p-4 rounded-lg text-center">
@@ -117,7 +117,7 @@
         <div class="paper-card p-4 rounded-lg text-center">
           <div class="text-xs text-stone-500 uppercase tracking-wider mb-1 font-semibold">Inference Latency</div>
           <div class="text-2xl font-bold text-stone-900">858 ms</div>
-          <div class="text-xs text-stone-500">DeepSeek-V4 cloud API</div>
+          <div class="text-xs text-stone-500">DeepSeek cloud API (deepseek-chat)</div>
         </div>
       </div>
     </header>
@@ -129,7 +129,7 @@
         Modern social media and algorithmic feeds have led to an unprecedented failure of text. As human communication is mediated through automated curation, short-video clips, and algorithmic feeds, original subjective intentions are systematically distorted. In this project, we treat generative ambient music as an analog for digital media itself. We built <strong>A Machine for Misunderstanding</strong>, an experimental human-computer-human installation forcing two participants in isolated rooms to converse solely through generative synthesis driven by language models.
       </p>
       <p class="text-stone-800 leading-relaxed text-[1.05rem] mt-3">
-        Across 10 sessions and 31 complete interaction cycles, our double-blind data proves that the acoustic medium introduces substantially greater distortion than the language model itself ($d_{\text{medium}} > d_{\text{model}}$ in 80% of sessions), and that positive affective intentions are routinely inverted into alarming acoustic experiences. This experiment renders visceral how computational media fundamentally destabilizes human expression.
+        Across 10 sessions and 36 complete interaction cycles, our double-blind data proves that the acoustic medium introduces substantially greater distortion than the language model itself ($d_{\text{medium}} > d_{\text{model}}$ in 7 of 10 sessions), and that positive affective intentions are routinely inverted into alarming acoustic experiences. This experiment renders visceral how computational media fundamentally destabilizes human expression.
       </p>
     </section>
 
@@ -167,13 +167,13 @@
           </div>
           <div onclick="showPipeline('llm')" id="node-llm" class="cursor-pointer border border-stone-300 bg-white p-4 rounded-lg transition hover:shadow-md">
             <div class="font-bold text-stone-900">② Language Model</div>
-            <div class="text-xs text-stone-600 mt-1">LoRA / DeepSeek-V4</div>
+            <div class="text-xs text-stone-600 mt-1">LoRA / DeepSeek (deepseek-chat)</div>
             <div class="text-xs text-stone-500 font-mono-code mt-2">Outputs {V, A, D, C}</div>
           </div>
           <div onclick="showPipeline('vcv')" id="node-vcv" class="cursor-pointer border border-stone-300 bg-white p-4 rounded-lg transition hover:shadow-md">
             <div class="font-bold text-stone-900">③ VCV Rack Modular</div>
             <div class="text-xs text-stone-600 mt-1">8-Ch Control Voltages</div>
-            <div class="text-xs text-stone-500 font-mono-code mt-2">0.0V – 10.0V DC</div>
+            <div class="text-xs text-stone-500 font-mono-code mt-2">−4.0V – +10.0V DC</div>
           </div>
           <div onclick="showPipeline('receiver')" id="node-receiver" class="cursor-pointer border border-stone-300 bg-white p-4 rounded-lg transition hover:shadow-md">
             <div class="font-bold text-stone-900">④ Receiver (User B)</div>
@@ -244,7 +244,7 @@
     <section class="mb-12">
       <h2 class="text-2xl font-semibold text-stone-950 border-b border-stone-200 pb-2 mb-4">4. Generative Sound Mapping (8-Channel Control Voltages)</h2>
       <p class="mb-4">
-        The psychological state $\{V, A, D, C\}$ directly computes 8 discrete control voltages ($0.0\,\text{V} - 10.0\,\text{V}$) transmitted via UDP/OSC to modulate Plaits, Plateau Reverb, and Clocked modules in VCV Rack:
+        The psychological state $\{V, A, D\}$ directly computes 8 discrete control voltages ($-4.0\,\text{V}$ to $+10.0\,\text{V}$) transmitted via UDP/OSC to modulate Plaits, Plateau Reverb, and Clocked modules in VCV Rack:
       </p>
 
       <div class="overflow-x-auto my-6 paper-card rounded-lg">
@@ -261,59 +261,59 @@
           <tbody class="font-sans-ui text-sm">
             <tr>
               <td class="font-bold">1</td>
-              <td class="font-mono-code text-xs">/vcv/timbre</td>
+              <td class="font-mono-code text-xs">/param/timbre</td>
               <td>Harmonic brightness</td>
               <td>Plaits (Timbre CV)</td>
-              <td class="font-mono-code text-xs">$v_1 = 10 \cdot [0.7A + 0.3(1 - V)]$</td>
+              <td class="font-mono-code text-xs">$v_1 = -3 + 8V$</td>
             </tr>
             <tr>
               <td class="font-bold">2</td>
-              <td class="font-mono-code text-xs">/vcv/frequency</td>
+              <td class="font-mono-code text-xs">/param/frequency</td>
               <td>Pitch center register</td>
               <td>Plaits (V/Oct modulation)</td>
-              <td class="font-mono-code text-xs">$v_2 = 10 \cdot [0.5 + 0.4(A - 0.5) + 0.1(D - 0.5)]$</td>
+              <td class="font-mono-code text-xs">$v_2 = -2 + 4A$</td>
             </tr>
             <tr>
               <td class="font-bold">3</td>
-              <td class="font-mono-code text-xs">/vcv/amplitude</td>
+              <td class="font-mono-code text-xs">/param/amplitude</td>
               <td>Dynamic volume level</td>
               <td>VCA Level / Drive</td>
-              <td class="font-mono-code text-xs">$v_3 = 10 \cdot [0.2 + 0.8A]$</td>
+              <td class="font-mono-code text-xs">$v_3 = 2 + 8A$</td>
             </tr>
             <tr>
               <td class="font-bold">4</td>
-              <td class="font-mono-code text-xs">/vcv/envelope</td>
+              <td class="font-mono-code text-xs">/param/envelope</td>
               <td>Decay transient time</td>
               <td>ADSR Envelope Decay</td>
-              <td class="font-mono-code text-xs">$v_4 = 10 \cdot [1.0 - 0.8A]$</td>
+              <td class="font-mono-code text-xs">$v_4 = -4 + 8(1 - A)$</td>
             </tr>
             <tr>
               <td class="font-bold">5</td>
-              <td class="font-mono-code text-xs">/vcv/mode</td>
-              <td>Synthesis engine select</td>
-              <td>Plaits (Model engine)</td>
-              <td class="font-mono-code text-xs">$v_5 = 10 \cdot V$</td>
+              <td class="font-mono-code text-xs">/param/mode</td>
+              <td>Scale mode select</td>
+              <td>ScaleCV (Mode)</td>
+              <td class="font-mono-code text-xs">$v_5 = -4 + 8V$</td>
             </tr>
             <tr>
               <td class="font-bold">6</td>
-              <td class="font-mono-code text-xs">/vcv/chord</td>
-              <td>Chord color & voicing</td>
-              <td>Chord Engine Morph</td>
-              <td class="font-mono-code text-xs">$v_6 = 10 \cdot [0.5 + 0.5(V - 0.5)]$</td>
+              <td class="font-mono-code text-xs">/param/chord</td>
+              <td>Chord degree (0–6)</td>
+              <td>DiatonicCV (Chord)</td>
+              <td class="font-mono-code text-xs">$v_6 = \operatorname{round}(6D)$</td>
             </tr>
             <tr>
               <td class="font-bold">7</td>
-              <td class="font-mono-code text-xs">/vcv/type</td>
-              <td>Space & Reverb diffusion</td>
-              <td>Plateau Reverb Decay</td>
-              <td class="font-mono-code text-xs">$v_7 = 10 \cdot [0.8(1 - D) + 0.2A]$</td>
+              <td class="font-mono-code text-xs">/param/type</td>
+              <td>Chord type (triad / 7th / 9th)</td>
+              <td>DiatonicCV (Type)</td>
+              <td class="font-mono-code text-xs">$v_7 = \operatorname{round}(2D)$</td>
             </tr>
             <tr>
               <td class="font-bold">8</td>
-              <td class="font-mono-code text-xs">/vcv/noise</td>
+              <td class="font-mono-code text-xs">/param/noise</td>
               <td>Chaos & Instability</td>
               <td>Noise / Morph Modulation</td>
-              <td class="font-mono-code text-xs">$v_8 = 10 \cdot [0.7(1 - C) + 0.3A]$</td>
+              <td class="font-mono-code text-xs">$v_8 = 10(1 - D)$</td>
             </tr>
           </tbody>
         </table>
@@ -324,7 +324,7 @@
     <section class="mb-12">
       <h2 class="text-2xl font-semibold text-stone-950 border-b border-stone-200 pb-2 mb-4">5. Experimental Data & Results</h2>
       <p class="mb-4">
-        Across the formal double-blind experimental trials, we selected the 6 representative multi-round sessions (21 complete rounds) to analyze communicative dynamics and acoustic impedance.
+        Across the formal double-blind experimental trials, we selected the 6 representative multi-round sessions (25 complete rounds) to analyze communicative dynamics and acoustic impedance.
       </p>
 
       <!-- Table 1 -->
@@ -390,7 +390,7 @@
             </tr>
             <tr class="bg-amber-50/50 font-semibold">
               <td class="text-stone-950">Group Mean</td>
-              <td>Pooled Trials</td>
+              <td>Mean of session means</td>
               <td class="text-center">21</td>
               <td class="text-right font-mono-code">0.1980</td>
               <td class="text-right font-mono-code text-amber-900">0.2984</td>
@@ -417,7 +417,7 @@
           </thead>
           <tbody class="font-sans-ui text-sm">
             <tr>
-              <td class="font-bold text-stone-900">Local Qwen2.5-1.5B LoRA</td>
+              <td class="font-bold text-stone-900">Local Qwen2.5-1.5B LoRA (Session 3)</td>
               <td>On-Device Apple Silicon (MPS)</td>
               <td class="text-right font-mono-code">4403.0 ms</td>
               <td class="text-right font-mono-code">0.2162</td>
@@ -425,7 +425,7 @@
               <td class="text-right font-mono-code font-bold">0.3805</td>
             </tr>
             <tr class="bg-stone-50">
-              <td class="font-bold text-emerald-900">DeepSeek-V4 API</td>
+              <td class="font-bold text-emerald-900">DeepSeek API, deepseek-chat (Session 4)</td>
               <td>Distributed Cloud Inference</td>
               <td class="text-right font-mono-code font-bold text-emerald-700">858.0 ms</td>
               <td class="text-right font-mono-code font-bold text-emerald-700">0.1587</td>
@@ -440,8 +440,8 @@
       <div class="paper-card p-6 rounded-xl border-l-4 border-l-amber-700 mb-6 bg-stone-50">
         <h4 class="font-sans-ui text-sm font-bold uppercase text-stone-900 mb-2">Key Analytical Discoveries</h4>
         <ol class="list-decimal pl-5 space-y-2 text-stone-800 text-[1rem]">
-          <li><strong>The Acoustic Medium Dominates Distortion ($d_{\text{medium}} > d_{\text{model}}$ in 80% of sessions)</strong>: Natural language processing captures sentiment with modest deviation ($\mu = 0.1980$), but physical transductions across synthetic timbre introduce severe entropy ($\mu = 0.2984$), skewing perception by +50.7%.</li>
-          <li><strong>Frontier Models Cannot Bypass Sensory Ambiguity</strong>: DeepSeek-V4 slashed text inference error by 26.6% and latency by 80.5%, yet receiver misunderstanding persisted ($d_{\text{medium}} = 0.2161$). Scaling computational intelligence does not eliminate the physical impedance of the medium.</li>
+          <li><strong>The Acoustic Medium Dominates Distortion ($d_{\text{medium}} > d_{\text{model}}$ in 7 of 10 sessions)</strong>: Natural language processing captures sentiment with modest deviation ($\mu = 0.1980$), but physical transductions across synthetic timbre introduce severe entropy ($\mu = 0.2984$), skewing perception by +50.7%.</li>
+          <li><strong>Frontier Models Cannot Bypass Sensory Ambiguity</strong>: DeepSeek (deepseek-chat, Session 4) slashed text inference error by 26.6% and latency by 80.5% relative to the local model in Session 3, yet receiver misunderstanding persisted ($d_{\text{medium}} = 0.2161$). Scaling computational intelligence does not eliminate the physical impedance of the medium.</li>
         </ol>
       </div>
 
@@ -462,7 +462,7 @@
         </div>
         <div class="paper-card p-3 rounded-lg">
           <img src="media/perf_20261003_135740.png" alt="Session 4 Run Plot" class="w-full rounded border border-stone-200">
-          <div class="font-sans-ui text-xs text-stone-500 mt-2 text-center">Fig 4: Session 4 — DeepSeek-V4 Accelerated Inference Trial</div>
+          <div class="font-sans-ui text-xs text-stone-500 mt-2 text-center">Fig 4: Session 4 — DeepSeek (deepseek-chat) Accelerated Inference Trial</div>
         </div>
       </div>
     </section>
@@ -492,16 +492,16 @@
         </div>
 
         <p class="mb-4">
-          In Round 1, Participant A typed: <em>"Your dream will come true."</em> with positive self-assessed confidence ($V=0.63, A=0.40, D=0.93$). The language model inferred high energy ($A=0.60$). In Eurorack voltage mapping, this drove Plaits' 2-operator FM timbre to maximal brightness while clamping envelope decay.
+          In Round 1, Participant B typed: <em>"Your dream will come true."</em> with positive self-assessed confidence ($V=0.63, A=0.40, D=0.93$). The language model inferred high energy ($A=0.60$). In Eurorack voltage mapping, this drove Plaits' 2-operator FM timbre to maximal brightness while clamping envelope decay.
         </p>
 
         <div class="bg-stone-50 p-4 rounded-lg border border-stone-200 font-sans-ui text-sm mb-4">
-          <div class="font-semibold text-stone-900 mb-1">Receiver Acoustic Reaction (Participant B):</div>
+          <div class="font-semibold text-stone-900 mb-1">Receiver Acoustic Reaction in Round 5, after <em>"You need to be confident!"</em> (Participant A):</div>
           <blockquote class="italic text-amber-900 pl-3 border-l-2 border-amber-700">
-            "He definitely wants to comfort me because the audio sounds deadass creepy. But that's not what I'm interpreting. Maybe he is confused."
+            "He def wanna comfort me because the audio sounds deadass creepy. But that's not what I'm interpreting. Maybe he is confused."
           </blockquote>
           <div class="text-xs text-stone-500 mt-2 font-mono-code">
-            Total Misunderstanding Score: $d_{\text{total}} = 0.579$ (Highest divergence in session)
+            Total Misunderstanding Score: $d_{\text{total}} = 0.427$ (Round 5; Round 1 scored $0.579$, the highest divergence in session)
           </div>
         </div>
 
@@ -559,7 +559,7 @@
     <section class="mb-12">
       <h2 class="text-2xl font-semibold text-stone-950 border-b border-stone-200 pb-2 mb-4">7. Conclusion</h2>
       <p class="mb-4">
-        The primary empirical finding of <em>A Machine for Misunderstanding</em> is that when human expression is forced through an automated intermediary, the medium itself introduces substantially more variance than the words themselves ($d_{\text{medium}} > d_{\text{model}}$ across 80% of trials). Natural language models are increasingly capable of approximating semantic intent; however, once those semantic representations are re-embodied into physical, continuous media—whether analog synthesizer voltages or algorithmic social media feeds—the structural properties of the medium dominate the interpretation. The medium does not merely transmit meaning; it possesses its own acoustic and affective agency that reshapes and alienates original intentions.
+        The primary empirical finding of <em>A Machine for Misunderstanding</em> is that when human expression is forced through an automated intermediary, the medium itself introduces substantially more variance than the words themselves ($d_{\text{medium}} > d_{\text{model}}$ in 7 of 10 sessions). Natural language models are increasingly capable of approximating semantic intent; however, once those semantic representations are re-embodied into physical, continuous media—whether analog synthesizer voltages or algorithmic social media feeds—the structural properties of the medium dominate the interpretation. The medium does not merely transmit meaning; it possesses its own acoustic and affective agency that reshapes and alienates original intentions.
       </p>
       <p class="mb-4">
         In contemporary digital culture, where authentic interpersonal connection is increasingly replaced by algorithmic feeds and flattened digital text, understanding this communicative gap is urgent. By quantifying how meaning shears and drifts across generative mediation, this study demonstrates that seamless digital communication is an illusion. Recognizing the inevitable distortion introduced by media is the first step toward reclaiming mindful, critical engagement with the computational systems that structure modern human interaction.
@@ -599,9 +599,9 @@
       if (node === 'sender') {
         detail.innerHTML = '<strong class="text-stone-900 text-sm">① Sender (Participant A):</strong> Enters natural textual reflections describing immediate internal somatic state. Self-evaluates baseline affective coordinates on three continuous sliders: Valence, Arousal, Dominance $\\in [0, 1]$. Coordinates are bundled with timestamp into JSON payload.';
       } else if (node === 'llm') {
-        detail.innerHTML = '<strong class="text-stone-900 text-sm">② Language Model Extractor:</strong> Evaluates lexical features using on-device Qwen2.5-1.5B LoRA (4.4s latency) or cloud DeepSeek-V4 (858ms latency). Generates continuous quadruplet $\\{V, A, D, C\\}$ where $C$ represents semantic Confidence/Certainty.';
+        detail.innerHTML = '<strong class="text-stone-900 text-sm">② Language Model Extractor:</strong> Evaluates lexical features using on-device Qwen2.5-1.5B LoRA (4.4s latency) or cloud DeepSeek API, deepseek-chat (858ms latency). Generates continuous quadruplet $\\{V, A, D, C\\}$ where $C$ represents semantic Confidence/Certainty.';
       } else if (node === 'vcv') {
-        detail.innerHTML = '<strong class="text-stone-900 text-sm">③ Modular Synthesizer (VCV Rack):</strong> Python engine calculates 8-channel control voltages ($0.0\\,\\text{V} - 10.0\\,\\text{V}$) via UDP OSC. Modulates Plaits timbral brightness ($v_1$), pitch center ($v_2$), dynamic VCA ($v_3$), envelope decay ($v_4$), Plaits engine ($v_5$), chord harmony ($v_6$), and Plateau reverb diffusion ($v_7$).';
+        detail.innerHTML = '<strong class="text-stone-900 text-sm">③ Modular Synthesizer (VCV Rack):</strong> Python engine calculates 8-channel control voltages ($-4.0\\,\\text{V}$ to $+10.0\\,\\text{V}$) via UDP OSC. Modulates Plaits timbral brightness ($v_1$), pitch center ($v_2$), dynamic VCA ($v_3$), envelope decay ($v_4$), scale mode ($v_5$), chord degree ($v_6$), and chord type ($v_7$).';
       } else if (node === 'receiver') {
         detail.innerHTML = '<strong class="text-stone-900 text-sm">④ Receiver (Participant B):</strong> Double-blind listening through studio monitoring headphones in an isolated room. Blind to sender text and model values. Logs perceived affective coordinates and qualitative phenomenological notes. Roles swap on subsequent cycle.';
       }

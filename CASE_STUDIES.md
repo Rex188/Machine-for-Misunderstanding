@@ -20,7 +20,7 @@ This supplementary dossier documents two critical case studies from the formal d
 **Model Backend**: Local Qwen2.5-1.5B LoRA (MPS Accelerated)  
 
 ### Round 1: When Optimism Triggers Alarm
-In Round 1, Participant A attempted to offer genuine encouragement to Participant B regarding gloomy weather:
+In Round 1, Participant B attempted to offer genuine encouragement to Participant A regarding gloomy weather:
 
 - **Sender Input Text**: *"Your dream will come true."*
 - **Sender Self-Reported VAD**: $V=0.63, A=0.40, D=0.93, C=0.67$ (High confidence, positive valence, calm energy)
@@ -34,7 +34,7 @@ In Round 1, Participant A attempted to offer genuine encouragement to Participan
   - **Total Misunderstanding ($d_{\text{total}}$)**: $\mathbf{0.579}$
 
 ### Round 5: Amplified Reassurance, Deepened Alienation
-By Round 5, sensing hesitation in the dialogue, Participant A attempted to double down on encouragement:
+By Round 5, sensing hesitation in the dialogue, Participant B attempted to double down on encouragement:
 
 - **Sender Input Text**: *"You need to be confident!"*
 - **Sender Self-Reported VAD**: $V=0.53, A=0.68, D=0.73, C=0.99$
