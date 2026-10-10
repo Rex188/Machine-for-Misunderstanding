@@ -2,7 +2,7 @@
 ## Extended Phenomenological Logs & Dialogue Records
 
 **Author**: Rex Li  
-**Parent Report**: [A Machine for Misunderstanding: Laboratory Research Report](file:///Users/rexli/Documents/Rex/portfolio/project2/LAB_REPORT.md)  
+**Parent Report**: [A Machine for Misunderstanding: Laboratory Research Report](LAB_REPORT.md)  
 **Project**: Portfolio Project 2 (`portfolio/project2/`)  
 **Data Source**: `portfolio/project2/blind_test/data/`  
 

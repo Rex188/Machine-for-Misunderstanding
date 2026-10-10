@@ -1,6 +1,6 @@
 # Project 2 Workflow — A Machine for Misunderstanding
 
-> [English](portfolio/project2/workflow/README.md) | **[简体中文](portfolio/project2/workflow/README.zh-CN.md)**
+> [English](README.md) | **[简体中文](README.zh-CN.md)**
 
 **一句话**:A 的现象学文本 → 黑箱解释模型 → VAD 向量 → OSC → VCV 声音。
 本目录是 Project 2「A Machine for Misunderstanding」的 MVP 实现层(自包含)。实际运行结果见 [`运行记录.zh-CN.md`](运行记录.zh-CN.md)。
