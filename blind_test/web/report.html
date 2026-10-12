@@ -123,27 +123,33 @@
     </header>
 
     <!-- Abstract -->
-    <section class="paper-card p-6 md:p-8 rounded-xl mb-12 bg-amber-50/40 border border-amber-900/15">
-      <h2 class="font-sans-ui text-xs font-bold uppercase tracking-wider text-amber-900 mb-2">Abstract</h2>
-      <p class="text-stone-800 leading-relaxed text-[1.05rem]">
-        Modern social media and algorithmic feeds have led to an unprecedented failure of text. As human communication is mediated through automated curation, short-video clips, and algorithmic feeds, original subjective intentions are systematically distorted. In this project, we treat generative ambient music as an analog for digital media itself. We built <strong>A Machine for Misunderstanding</strong>, an experimental human-computer-human installation forcing two participants in isolated rooms to converse solely through generative synthesis driven by language models.
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold text-stone-950 border-b border-stone-200 pb-2 mb-4">Abstract</h2>
+      <p class="mb-4">
+        Modern social media and fast fashion culture have led to an unprecedented failure of text. As human communication is mediated through algorithmic feeds, automated curation, and fast-paced platforms, original subjective meanings are consistently distorted. In this project, I treat generative ambient music as an analog for digital media itself. <strong>A Machine for Misunderstanding</strong> was built, an experimental human-computer-human system that forces two participants to converse solely through generative synthesis driven by language models.
       </p>
-      <p class="text-stone-800 leading-relaxed text-[1.05rem] mt-3">
-        Across 10 sessions and 36 complete interaction cycles, our double-blind data proves that the acoustic medium introduces substantially greater distortion than the language model itself ($d_{\text{medium}} > d_{\text{model}}$ in 7 of 10 sessions), and that positive affective intentions are routinely inverted into alarming acoustic experiences. This experiment renders visceral how computational media fundamentally destabilizes human expression.
+      <p>
+        Across 10 sessions and 36 complete interaction cycles, the divergence between what people meant and what was perceived was measured. The data demonstrates that the acoustic medium introduces substantially greater distortion than the language model itself ($d_{\text{medium}} > d_{\text{model}}$ in 7 of 10 sessions), and that positive intentions are often distorted by the medium into disturbing acoustic experiences. This experiment visualizes how modern media fundamentally destabilizes human expression, turning communication into an ongoing struggle against mediation.
       </p>
     </section>
 
     <!-- Section 1 -->
     <section class="mb-12">
       <h2 class="text-2xl font-semibold text-stone-950 border-b border-stone-200 pb-2 mb-4">1. Introduction: Media and the Breakdown of Language</h2>
-      <h3 class="text-xl font-medium text-stone-800 mb-2">1.1 The Medium is the Message in the Algorithmic Age</h3>
+      <h3 class="text-xl font-medium text-stone-800 mb-2">1.1 The Medium is the Message</h3>
       <p class="mb-4">
-        Marshall McLuhan famously formulated that <em>"the medium is the message"</em>: the infrastructure through which we communicate is never a neutral container; it actively reshapes, filters, and defines the content it carries. In contemporary social media, human expression is passed through opaque recommender networks and viral compression. Words lose their visceral context. We believe we are speaking to another human, but we are actually speaking into a computational medium that reformulates our intentions, creating widespread social alienation, affective polarization, and chronic misunderstanding.
+        Marshall McLuhan famously argued that <em>"the medium is the message"</em>. The medium through which we communicate is never a neutral container; it actively reshapes, filters, and defines the content it carries.
+      </p>
+      <p class="mb-4">
+        In today's social media ecosystem, this premise has reached a breaking point. Language is no longer an unmediated connection between two human minds. Instead, human expression is passed through recommender systems, short-video clips, and meme cycles. Words lose their visceral weight. We believe we are speaking to one another, but we are actually speaking into an opaque computational medium that reformulates our intentions, creating widespread social alienation, polarization, and chronic misunderstanding.
       </p>
 
       <h3 class="text-xl font-medium text-stone-800 mb-2">1.2 Music as an Extreme Form of Mediation</h3>
       <p class="mb-4">
-        Instead of designing an AI tool to "optimize" or "clarify" communication, we built a system to expose this rupture. A sender inputs their real-time emotional and bodily state in natural text. An AI model interprets these words into 4-dimensional psychological coordinates $\{V, A, D, C\}$, which directly modulate an analog-style modular synthesizer (VCV Rack). A blind receiver hears the resulting continuous generative soundscape and attempts to reconstruct what the sender originally felt. By treating ambient sound as media infrastructure, the experiment dramatizes how mediation inevitably shears human connection.
+        This project investigates this phenomenon by turning sound into a tangible metaphor for social media. I ask a fundamental question: <strong>What happens to human meaning when language is translated through an algorithmic, generative medium?</strong>
+      </p>
+      <p class="mb-4">
+        Instead of building a utility to "optimize" or "clarify" communication, we designed a system that exposes the gap. A sender inputs their real-time emotional and bodily state into words. An AI model interprets these words into emotional coordinates, which directly modulate an analog-style modular synthesizer (VCV Rack). A blind receiver listens to the resulting generative soundscape and attempts to reconstruct what the sender originally felt. By treating ambient sound as media infrastructure, the experiment dramatizes how modern mediation inevitably distorts human connection.
       </p>
     </section>
 
@@ -467,9 +473,9 @@
       </div>
     </section>
 
-    <!-- Section 6: Qualitative Case Studies & Video Footage -->
+    <!-- Section 6: Qualitative Case Studies -->
     <section class="mb-12">
-      <h2 class="text-2xl font-semibold text-stone-950 border-b border-stone-200 pb-2 mb-4">6. Qualitative Case Studies & Double-Blind Screen Recordings</h2>
+      <h2 class="text-2xl font-semibold text-stone-950 border-b border-stone-200 pb-2 mb-4">6. Qualitative Case Studies</h2>
       <p class="mb-6">
         Below are complete transcripts, psychoacoustic analyses, and synchronized performance screen captures from the lab sessions.
       </p>
@@ -508,16 +514,10 @@
         <!-- Video Player for Session 1 / Evolution -->
         <div class="my-4">
           <div class="font-sans-ui text-xs font-semibold text-stone-700 mb-2">Double-Blind Lab Recording: Session 1 Audio-Visual Log</div>
-          <div class="relative w-full aspect-video rounded-lg overflow-hidden border border-stone-300 bg-black shadow-sm">
-            <iframe 
-              class="absolute inset-0 w-full h-full"
-              src="https://www.youtube.com/embed/Ja28yAn4ow8" 
-              title="Double-Blind Lab Recording: Session 1"
-              frameborder="0" 
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-              allowfullscreen>
-            </iframe>
-          </div>
+          <video controls class="w-full rounded-lg border border-stone-300 bg-black max-h-[420px]">
+            <source src="media/session1_recording.mp4" type="video/mp4">
+            Your browser does not support HTML5 video playback.
+          </video>
           <div class="font-sans-ui text-xs text-stone-500 mt-1">Footage recorded live: October 3, 2026 11:42 AM • Multi-channel audio & real-time VCV synthesis.</div>
         </div>
       </div>

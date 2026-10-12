@@ -7,23 +7,23 @@
 
 ---
 
-## Abstract
+## Abstract 
 
-Modern social media and fast fashion culture have led to an unprecedented failure of text. As human communication is mediated through algorithmic feeds, automated curation, and fast-paced platforms, original subjective meanings are consistently distorted. In this project, we treat generative ambient music as an analog for digital media itself. We built **A Machine for Misunderstanding**, an experimental human-computer-human system that forces two participants to converse solely through generative synthesis driven by language models.
+Modern social media and fast fashion culture have led to an unprecedented failure of text. As human communication is mediated through algorithmic feeds, automated curation, and fast-paced platforms, original subjective meanings are consistently distorted. In this project, I treat generative ambient music as an analog for digital media itself. **A Machine for Misunderstanding** was built, an experimental human-computer-human system that forces two participants to converse solely through generative synthesis driven by language models.
 
-Across 10 sessions and 36 complete interaction cycles, we measured the divergence between what people meant and what was perceived. Our data demonstrates that the acoustic medium introduces substantially greater distortion than the language model itself ($d_{\text{medium}} > d_{\text{model}}$ in 7 of 10 sessions), and that positive intentions are often distorted by the medium into disturbing acoustic experiences. This experiment visualizes how modern media fundamentally destabilizes human expression, turning communication into an ongoing struggle against mediation.
+Across 10 sessions and 36 complete interaction cycles, the divergence between what people meant and what was perceived was measured. The data demonstrates that the acoustic medium introduces substantially greater distortion than the language model itself ($d_{\text{medium}} > d_{\text{model}}$ in 7 of 10 sessions), and that positive intentions are often distorted by the medium into disturbing acoustic experiences. This experiment visualizes how modern media fundamentally destabilizes human expression, turning communication into an ongoing struggle against mediation.
 
 ---
 
 ## 1. Introduction: Media and the Breakdown of Language
 
-### 1.1 The Medium is the Message in the Algorithmic Age
+### 1.1 The Medium is the Message
 Marshall McLuhan famously argued that *"the medium is the message"*. The medium through which we communicate is never a neutral container; it actively reshapes, filters, and defines the content it carries. 
 
-In today's social media ecosystem, this premise has reached a breaking point. Language is no longer an unmediated connection between two human minds. Instead, human expression is passed through algorithmic black boxes, recommender systems, short-video clips, and meme cycles. Words lose their visceral weight. We believe we are speaking to one another, but we are actually speaking into an opaque computational medium that reformulates our intentions, creating widespread social alienation, polarization, and chronic misunderstanding.
+In today's social media ecosystem, this premise has reached a breaking point. Language is no longer an unmediated connection between two human minds. Instead, human expression is passed through recommender systems, short-video clips, and meme cycles. Words lose their visceral weight. We believe we are speaking to one another, but we are actually speaking into an opaque computational medium that reformulates our intentions, creating widespread social alienation, polarization, and chronic misunderstanding.
 
 ### 1.2 Music as an Extreme Form of Mediation
-This project investigates this breakdown by turning sound into a tangible metaphor for social media. We ask a fundamental question: **What happens to human meaning when language is translated through an algorithmic, generative medium?**
+This project investigates this phenomenon by turning sound into a tangible metaphor for social media. I ask a fundamental question: **What happens to human meaning when language is translated through an algorithmic, generative medium?**
 
 Instead of building a utility to "optimize" or "clarify" communication, we designed a system that exposes the gap. A sender inputs their real-time emotional and bodily state into words. An AI model interprets these words into emotional coordinates, which directly modulate an analog-style modular synthesizer (VCV Rack). A blind receiver listens to the resulting generative soundscape and attempts to reconstruct what the sender originally felt. By treating ambient sound as media infrastructure, the experiment dramatizes how modern mediation inevitably distorts human connection.
 
@@ -135,7 +135,7 @@ To determine whether larger parameter capacity and external reasoning scale can 
 
 ---
 
-## 6. Qualitative Case Studies & Phenomenological Logs
+## 6. Qualitative Case Studies
 
 To understand how mathematical deviations translate into visceral human experiences, we documented detailed dialogue logs, participant feedback, and psychoacoustic inversions across two formal sessions. 
 
